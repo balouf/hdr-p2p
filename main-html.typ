@@ -1,5 +1,6 @@
 // =============================================================================
-// Thèse : Graphes du Web - Mesures d'importance à la PageRank
+// HDR : Autour du pair-à-pair — Distribution de contenus,
+//       réseaux à préférences acycliques
 // Point d'entrée pour l'export HTML
 // =============================================================================
 //
@@ -20,12 +21,16 @@
 #import "templates/algorithms.typ": *
 #import "templates/acronyms.typ": *
 #import "templates/html-overrides.typ": *
+#import "templates/prelude.typ": double-vowels
 
 // Initialiser les acronymes
 #init-acronyms(acronyms)
 
 // Appliquer le style de thèse (page/headers seront ignorés en HTML, c'est OK)
 #show: thesis-style
+
+// Appliquer les ligatures œ/æ
+#show: double-vowels
 
 // Appliquer les show rules HTML (math → SVG, grid → SVG)
 #show: html-show-rules
@@ -40,12 +45,11 @@
 
 #set document(
   title: t(
-    "Graphes du Web - Mesures d'importance à la PageRank",
-    "Web Graphs - PageRank-like Importance Measures",
+    "Autour du pair-à-pair — Distribution de contenus, réseaux à préférences acycliques",
+    "On Peer-to-peer — Content Distribution, Acyclic Preference Networks",
   ),
   author: "Fabien Mathieu",
 )
-// Note: thesis-title utilise du markup (smallcaps), donc on garde des chaînes simples ici pour le HTML.
 
 // -----------------------------------------------------------------------------
 // Page de titre (version HTML simplifiée)
@@ -87,74 +91,79 @@
   }
 ]
 
-// =============================================================================
-// PARTIE I : Structures du Web
-// =============================================================================
+// -----------------------------------------------------------------------------
+// Positionnement
+// -----------------------------------------------------------------------------
 
-#part-marker("part-1", t([Partie I — Structures du Web], [Part I — Structures of the Web]))
-
-#chapter-section("ch1-taille")[
+#chapter-section("positionnement")[
   #if lang == "en" {
-    include "chapters/ch1-taille.en.typ"
+    include "chapters/positionnement.en.typ"
   } else {
-    include "chapters/ch1-taille.typ"
+    include "chapters/positionnement.typ"
   }
 ]
 
-#chapter-section("ch2-graphe")[
-  #if lang == "en" {
-    include "chapters/ch2-graphe.en.typ"
-  } else {
-    include "chapters/ch2-graphe.typ"
-  }
-]
+// -----------------------------------------------------------------------------
+// Distribution de contenu
+// -----------------------------------------------------------------------------
 
-#chapter-section("ch3-local")[
+#chapter-section("distribution")[
   #if lang == "en" {
-    include "chapters/ch3-local.en.typ"
+    include "chapters/distribution.en.typ"
   } else {
-    include "chapters/ch3-local.typ"
+    include "chapters/distribution.typ"
   }
 ]
 
 // =============================================================================
-// PARTIE II : Algorithmes de classement de pages web : les « PageRank »
+// Chapitre principal : Réseaux à préférences acycliques (décomposé)
 // =============================================================================
 
-#part-marker("part-2", t(
-  [Partie II — Algorithmes de classement de pages web : les « PageRank »],
-  [Part II — Web Page Ranking Algorithms: PageRank],
-))
-
-#chapter-section("ch4-markov")[
+#chapter-section("acyclique")[
   #if lang == "en" {
-    include "chapters/ch4-markov.en.typ"
+    include "chapters/acyclique-html-intro.en.typ"
   } else {
-    include "chapters/ch4-markov.typ"
+    include "chapters/acyclique-html-intro.typ"
   }
 ]
 
-#chapter-section("ch5-pagerank")[
+#chapter-section("acyclique-origine")[
   #if lang == "en" {
-    include "chapters/ch5-pagerank.en.typ"
+    include "chapters/acyclique-origine.en.typ"
   } else {
-    include "chapters/ch5-pagerank.typ"
+    include "chapters/acyclique-origine.typ"
   }
 ]
 
-#chapter-section("ch6-back")[
+#chapter-section("acyclique-bases")[
   #if lang == "en" {
-    include "chapters/ch6-back.en.typ"
+    include "chapters/acyclique-bases.en.typ"
   } else {
-    include "chapters/ch6-back.typ"
+    include "chapters/acyclique-bases.typ"
   }
 ]
 
-#chapter-section("ch7-dpr")[
+#chapter-section("acyclique-convergence")[
   #if lang == "en" {
-    include "chapters/ch7-dpr.en.typ"
+    include "chapters/acyclique-convergence.en.typ"
   } else {
-    include "chapters/ch7-dpr.typ"
+    include "chapters/acyclique-convergence.typ"
+  }
+]
+
+#chapter-section("acyclique-stable")[
+  #if lang == "en" {
+    include "chapters/acyclique-stable.en.typ"
+  } else {
+    include "chapters/acyclique-stable.typ"
+  }
+]
+
+#chapter-section("acyclique-conclusion")[
+  #if lang == "en" {
+    include "chapters/acyclique-conclusion.en.typ"
+  } else {
+    include "chapters/acyclique-conclusion.typ"
   }
 ]
 
@@ -170,38 +179,10 @@
   }
 ]
 
-// =============================================================================
-// ANNEXES
-// =============================================================================
-
-#appendix[
-  #chapter-section("annexeA")[
-    #if lang == "en" {
-      include "appendices/annexeA-PF.en.typ"
-    } else {
-      include "appendices/annexeA-PF.typ"
-    }
-  ]
-  #chapter-section("annexe-inria")[
-    #if lang == "en" {
-      include "appendices/annexe-inria.en.typ"
-    } else {
-      include "appendices/annexe-inria.typ"
-    }
-  ]
-  #chapter-section("p2p-missing")[
-    #if lang == "en" {
-      include "appendices/p2p-missing.en.typ"
-    } else {
-      include "appendices/p2p-missing.typ"
-    }
-  ]
-]
-
 // -----------------------------------------------------------------------------
 // Bibliographie
 // -----------------------------------------------------------------------------
 
 #chapter-section("bibliography")[
-  #bibliography("bibliography.yml", style: "ieee")
+  #bibliography("references.bib", style: "springer-lncs-alphabetical.csl")
 ]

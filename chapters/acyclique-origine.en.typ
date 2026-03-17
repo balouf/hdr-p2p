@@ -1,0 +1,20 @@
+#import "../templates/prelude.typ": *
+
+== Origin
+
+The origin of preference networks is the theory of _stable marriages_ proposed by Gale and Shapley. The most entertaining version of this problem appears in the original $1962$ article @gale62college: it consists of marrying men and women while ensuring that any risk of adultery is avoided. Formally, an instance of the stable marriage problem consists of two sets $H$ and $F$ (the men and the women), each strictly ranking a subset of the members of the opposite sex. A configuration of this instance is simply a matching between $H$ and $F$. It is unstable if there exists a pair $(h,f)$ not belonging to the configuration, such that $h$ prefers $f$ to his partner in the configuration (or if $h$ is single, that $h$ accepts being with $f$), and reciprocally. If this occurs, adultery is not far off, because $h$ and $f$ both have an interest in getting together, even if it means the end of their current couple. Starting from this definition, the objective of the theory is to identify the stable configurations of a given instance. It was proved as early as $1962$ that if preferences are strict (no ties in the rankings), there always exists a stable configuration, which can be easily obtained by the _proposal algorithm_ @gale62college.
+
+A first extension of the problem is that of _college admission_ (_college admission_ or _hospitals/residents_ in the original English terminology @roth84evolution @irving00hospitals). In this variant, members of one of the sets can choose several representatives from the opposite set. For example, a university can open several faculty positions each year, but a future faculty member will go to only one university. As with the stable marriage problem, it is always possible to obtain a stable configuration, and certain algorithms proposed by Gale and Shapley are still in use in many recruitment processes.
+
+But for P2P, the interesting extension is the one where there is only a single category of participants. This unisex variant is known as the _roommates_ problem in the case of simple matching, and $b$-matching in the general case, $b$ being the standard notation for the vector describing the quotas of the multi-matching @fleiner03stable @irving87efficient @irving02stable. Unisex matching finds applications in numerous domains, one of the most active variants being pairwise kidney exchange programs @roth05pairwise @grey. The main difficulty compared to sex-typed marriages is that it is no longer possible to guarantee the existence of a stable configuration, which can prove problematic, particularly when it comes to organ donation.
+
+=== Reinventing the wheel?
+
+Intuitively, the interest of marriage theories for P2P is quite obvious: if one has a set of peers, each possessing a list of neighbors with whom it is likely to interact, the theory should be able to shed light on what happens assuming that each peer acts according to its own interest (i.e., its own preferences).
+
+Since marriage theories have existed for nearly $50$ years, one might think that it suffices to take the existing literature to have the ideal P2P modeling tool. In practice, things are not so simple: marriage theories do indeed offer an extremely powerful theoretical foundation, but the specificities related to P2P require seeing the problem from a new angle, that of preference networks, which are the subject of this chapter.
+
+More precisely, the main changes brought by preference networks are the following:
+- the preferences of classical $b$-matching problems are often arbitrary, whereas in P2P, most preferences are derived from objective measurements;
+- the existence of stable configurations and the means to obtain them are an essential component of $b$-matching problems; conversely, most P2P preferences benefit from a powerful existence/uniqueness/convergence theorem that makes these questions moot;
+- the questions of dynamics and performance of configurations are a fundamental aspect for P2P, and must therefore be highlighted.

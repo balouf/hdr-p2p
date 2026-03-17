@@ -1,12 +1,13 @@
 // =============================================================================
-// Thèse : Graphes du Web - Mesures d'importance à la PageRank
-// Fabien Mathieu - 2004
+// HDR : Autour du pair-à-pair — Distribution de contenus,
+//       réseaux à préférences acycliques
+// Fabien Mathieu - 2009
 // Conversion LaTeX → Typst - 2026
 // =============================================================================
 //
 // Compilation:
-//   typst compile --input lang=fr main.typ thesis-fr.pdf
-//   typst compile --input lang=en main.typ thesis-en.pdf
+//   typst compile --input lang=fr main.typ hdr-fr.pdf
+//   typst compile --input lang=en main.typ hdr-en.pdf
 // =============================================================================
 
 // -----------------------------------------------------------------------------
@@ -48,13 +49,11 @@
 // Remerciements
 // -----------------------------------------------------------------------------
 
-#include "chapters/remerciements.typ"
-
-// #if lang == "en" {
-//   include "chapters/remerciements.en.typ"
-// } else {
-//   include "chapters/remerciements.typ"
-// }
+#if lang == "en" {
+  include "chapters/remerciements.en.typ"
+} else {
+  include "chapters/remerciements.typ"
+}
 
 
 // -----------------------------------------------------------------------------
@@ -69,16 +68,35 @@
 
 
 
+#if lang == "en" {
+  include "chapters/introduction.en.typ"
+} else {
+  include "chapters/introduction.typ"
+}
 
-#include "chapters/introduction.typ"
+#if lang == "en" {
+  include "chapters/positionnement.en.typ"
+} else {
+  include "chapters/positionnement.typ"
+}
 
-#include "chapters/positionnement.typ"
+#if lang == "en" {
+  include "chapters/distribution.en.typ"
+} else {
+  include "chapters/distribution.typ"
+}
 
-#include "chapters/distribution.typ"
+#if lang == "en" {
+  include "chapters/acyclique.en.typ"
+} else {
+  include "chapters/acyclique.typ"
+}
 
-#include "chapters/acyclique.typ"
-
-#include "chapters/conclusion.typ"
+#if lang == "en" {
+  include "chapters/conclusion.en.typ"
+} else {
+  include "chapters/conclusion.typ"
+}
 
 
 // -----------------------------------------------------------------------------

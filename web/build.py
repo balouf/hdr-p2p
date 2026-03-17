@@ -42,17 +42,15 @@ CHAPTERS = {
         ("disclaimer", "disclaimer.html", "Avertissement"),
         ("remerciements", "remerciements.html", "Remerciements"),
         ("introduction", "introduction.html", "Introduction"),
-        ("ch1-taille", "ch1-taille.html", "Ch. 1 — Taille du Web"),
-        ("ch2-graphe", "ch2-graphe.html", "Ch. 2 — Graphes du Web"),
-        ("ch3-local", "ch3-local.html", "Ch. 3 — Structures locales"),
-        ("ch4-markov", "ch4-markov.html", "Ch. 4 — Chaînes de Markov"),
-        ("ch5-pagerank", "ch5-pagerank.html", "Ch. 5 — PageRank"),
-        ("ch6-back", "ch6-back.html", "Ch. 6 — BackRank"),
-        ("ch7-dpr", "ch7-dpr.html", "Ch. 7 — PageRank distribué"),
-        ("conclusion", "conclusion.html", "Conclusion"),
-        ("annexeA", "annexeA.html", "Annexe A"),
-        ("annexe-inria", "annexe-inria.html", "Annexe B"),
-        ("p2p-missing", "p2p-missing.html", "Annexe C"),
+        ("positionnement", "positionnement.html", "Positionnement"),
+        ("distribution", "distribution.html", "Distribution de contenu"),
+        ("acyclique", "acyclique.html", "Présentation"),
+        ("acyclique-origine", "acyclique-origine.html", "Origine"),
+        ("acyclique-bases", "acyclique-bases.html", "Les bases"),
+        ("acyclique-convergence", "acyclique-convergence.html", "Auto-stabilisation"),
+        ("acyclique-stable", "acyclique-stable.html", "Configurations stables"),
+        ("acyclique-conclusion", "acyclique-conclusion.html", "Conclusion du chapitre"),
+        ("conclusion", "conclusion.html", "Synthèse et perspectives"),
         ("bibliography", "bibliography.html", "Bibliographie"),
     ],
     "en": [
@@ -60,43 +58,45 @@ CHAPTERS = {
         ("disclaimer", "disclaimer.html", "Disclaimer"),
         ("remerciements", "remerciements.html", "Acknowledgments"),
         ("introduction", "introduction.html", "Introduction"),
-        ("ch1-taille", "ch1-taille.html", "Ch. 1 — Web Size"),
-        ("ch2-graphe", "ch2-graphe.html", "Ch. 2 — Web Graphs"),
-        ("ch3-local", "ch3-local.html", "Ch. 3 — Local Structures"),
-        ("ch4-markov", "ch4-markov.html", "Ch. 4 — Markov Chains"),
-        ("ch5-pagerank", "ch5-pagerank.html", "Ch. 5 — PageRank"),
-        ("ch6-back", "ch6-back.html", "Ch. 6 — BackRank"),
-        ("ch7-dpr", "ch7-dpr.html", "Ch. 7 — Distributed PageRank"),
-        ("conclusion", "conclusion.html", "Conclusion"),
-        ("annexeA", "annexeA.html", "Appendix A"),
-        ("annexe-inria", "annexe-inria.html", "Appendix B"),
-        ("p2p-missing", "p2p-missing.html", "Appendix C"),
+        ("positionnement", "positionnement.html", "Positioning"),
+        ("distribution", "distribution.html", "Content Distribution"),
+        ("acyclique", "acyclique.html", "Overview"),
+        ("acyclique-origine", "acyclique-origine.html", "Origin"),
+        ("acyclique-bases", "acyclique-bases.html", "Foundations"),
+        ("acyclique-convergence", "acyclique-convergence.html", "Self-stabilization"),
+        ("acyclique-stable", "acyclique-stable.html", "Stable Configurations"),
+        ("acyclique-conclusion", "acyclique-conclusion.html", "Chapter Conclusion"),
+        ("conclusion", "conclusion.html", "Synthesis and Perspectives"),
         ("bibliography", "bibliography.html", "Bibliography"),
     ],
 }
 
 PARTS = {
     "fr": [
-        (None, ["cover", "disclaimer", "remerciements", "introduction"]),
-        ("Partie I — Structures du Web", ["ch1-taille", "ch2-graphe", "ch3-local"]),
-        ("Partie II — Les PageRank", ["ch4-markov", "ch5-pagerank", "ch6-back", "ch7-dpr"]),
+        (None, ["cover", "disclaimer", "remerciements"]),
+        (None, ["introduction", "positionnement", "distribution"]),
+        ("Réseaux à préférences acycliques", [
+            "acyclique", "acyclique-origine", "acyclique-bases",
+            "acyclique-convergence", "acyclique-stable", "acyclique-conclusion",
+        ]),
         (None, ["conclusion"]),
-        ("Annexes", ["annexeA", "annexe-inria", "p2p-missing"]),
         (None, ["bibliography"]),
     ],
     "en": [
-        (None, ["cover", "disclaimer", "remerciements", "introduction"]),
-        ("Part I — Web Structures", ["ch1-taille", "ch2-graphe", "ch3-local"]),
-        ("Part II — PageRank", ["ch4-markov", "ch5-pagerank", "ch6-back", "ch7-dpr"]),
+        (None, ["cover", "disclaimer", "remerciements"]),
+        (None, ["introduction", "positionnement", "distribution"]),
+        ("Acyclic Preference Networks", [
+            "acyclique", "acyclique-origine", "acyclique-bases",
+            "acyclique-convergence", "acyclique-stable", "acyclique-conclusion",
+        ]),
         (None, ["conclusion"]),
-        ("Appendices", ["annexeA", "annexe-inria", "p2p-missing"]),
         (None, ["bibliography"]),
     ],
 }
 
 THESIS_TITLE = {
-    "fr": "Graphes du Web — Mesures d'importance à la PageRank",
-    "en": "Web Graphs — PageRank-like Importance Measures",
+    "fr": "Autour du pair-à-pair — Distribution de contenus, réseaux à préférences acycliques",
+    "en": "On Peer-to-peer — Content Distribution, Acyclic Preference Networks",
 }
 
 LANG_LABELS = {
@@ -104,7 +104,7 @@ LANG_LABELS = {
     "en": "English",
 }
 
-GITHUB_URL = "https://github.com/balouf/phd-pagerank"
+GITHUB_URL = "https://github.com/balouf/hdr-p2p"
 BASE_URL = "/"  # Overridden by --base-url CLI arg
 
 # ---------------------------------------------------------------------------
@@ -158,7 +158,7 @@ def compile_pdfs(langs: list[str]):
     pdf_dir = DIST_DIR / "pdf"
     pdf_dir.mkdir(parents=True, exist_ok=True)
     for lang in langs:
-        out = pdf_dir / f"thesis-{lang}.pdf"
+        out = pdf_dir / f"hdr-{lang}.pdf"
         cmd = [
             "typst", "compile",
             "--input", f"lang={lang}",
@@ -176,7 +176,7 @@ def compile_pdfs(langs: list[str]):
         warnings = [l for l in result.stderr.splitlines() if l.startswith("warning:")]
         if warnings:
             print(f"    ({len(warnings)} warnings suppressed)")
-        print(f"    -> pdf/thesis-{lang}.pdf ({out.stat().st_size // 1024} KB)")
+        print(f"    -> pdf/hdr-{lang}.pdf ({out.stat().st_size // 1024} KB)")
 
 
 # ---------------------------------------------------------------------------
@@ -450,7 +450,7 @@ def generate_redirect_index():
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Thesis — Fabien Mathieu</title>
+  <title>HDR — Fabien Mathieu</title>
   <script>
     var lang = (navigator.language || navigator.userLanguage || "fr").toLowerCase();
     var target = lang.startsWith("en") ? "en" : "fr";
