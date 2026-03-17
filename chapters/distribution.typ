@@ -1,0 +1,78 @@
+= Distribution de contenu <ch:distribution>
+
+L'objet de ce chapitre est de faire le tour des problématiques liées à la distribution de contenu dans une approche pair-à-pair, en se focalisant sur les thèmes que j'ai personnellement abordé au cours de mes recherches. Je commence par préciser ce que j'entends exactement par _distribution de contenu_ (partage de fichier, diffusion en léger différé, vidéo-à-la-demande), en soulignant les enjeux spécifiques et communs de chaque type de distribution. Je parle ensuite de trois problématiques spécifiques : dimensionnement en bande passante (générique à tous les types de distribution), diffusion épidémique (léger différé), et vidéo-à-la-demande décentralisée
+
+== Distribuer
+
+Lorsque je parle de distribution, je pense avant tout à du contenu de grande taille : programmes et OS informatiques, fichiers musicaux, film en DivX, chaîne diffusée en haute définition#footnote[La diffusion de contenu de très petite taille (par exemple un système de petites annonces pair-à-pair), du fait de l'inexistence de la bande passante comme paramètre limitant, obéit à des enjeux radicalement différents de ceux que je vais présenter ici.]. Pour ce genre de contenu ayant besoin de grandes ressources réseaux, on peut distinguer grossièrement trois manières d'effectuer la distribution : partage de fichier, diffusion en léger différé et diffusion _à-la-demande_.
+
+=== Partage de fichier
+
+Historiquement, l'application reine du pair-à-pair en distribution est le partage de fichiers, dont le succès n'est je pense plus à démontrer. Comme dans le cas d'un téléchargement classique (non pair-à-pair), il s'agit d'une application de type _best effort_ par nature, et le temps de téléchargement effectif constitue la principale métrique. D'un point de vue réseau, un enjeu est donc d'arriver à utiliser de manière optimale les ressources disponibles, afin de minimiser ce temps de téléchargement. La garantie d'une certaine pérennité du contenu partagé (éviter les téléchargements impossibles) joue également un rôle.
+
+=== Diffusion _streaming_
+
+Une application de _streaming_ a pour but de transmettre un contenu multimedia à des fins de visualisation ou d'écoute. Ce genre d'application n'est pas du tout _best effort_, contrairement au partage de fichier, car des contraintes apparaissent au moment de la lecture du contenu (principalement, il faut s'assurer que la partie du contenu que l'on veut lire soit là quand on on en a besoin). Parmi les métriques communes à toute diffusion, il y a :
+
+/ La qualité: en première approximation, elle est proportionnelle au débit du flux, même si d'autres paramètres rentrent en compte, comme le choix de l'encodage ou le taux de pertes.
+/ Le délai d'initialisation: c'est le temps qui s'écoule entre le moment où l'on décide de regarder un contenu et celui où celui-ci commence à être lu.
+
+D'un point de vue réseau, l'enjeu est d'arriver à
+- maximiser le débit utile, notamment en minimisant les messages de contrôle (_overhead_),
+- minimiser les pertes,
+- minimiser le délai de transmission (réseau).
+
+Ces trois paramètres sont étroitement reliés entre eux en pair-à-pair. Par exemple, il est généralement possible de réduire le délai de transmission au prix de pertes ou d'un overhead plus élevés. Tout l'art de la conception d'un système de diffusion consiste alors à trouver le bon compromis.
+
+==== léger différé
+
+Le streaming en léger différé (le terme _direct_ étant quelque peu présomptueux sur Internet) cherche à diffuser un événement qui est en train de se produire, par exemple un match de football. En plus des contraintes liées à toute diffusion sur Internet, le principal enjeu du léger différé est d'arriver à minimiser le délai de transmission de bout-en-bout, c'est-à-dire le temps qui s'écoule entre le moment où un but est marqué (et donc où l'on entend ses voisins, qui regardent le match à la télévision, crier) et celui où on peut le voir sur son écran d'ordinateur. D'un point de vue réseau, les enjeux sont les mêmes que pour le streaming en général, mise à parte que l'importance du délai de transmission est accrue. La nature même du léger différé crée aussi des avantages et des inconvénients spécifiques. Par exemple, il n'est pas nécessaire de se préoccuper de l'existence du contenu (il est directement injecté dans le système), mais il faut pouvoir satisfaire un grand nombre de personnes regardant un même contenu de manière quasi-synchrone.
+
+==== Vidéo-à-la-demande (VoD)
+
+La vidéo-à-la-demande consiste principalement à associer un système de partage de fichiers à un système de streaming. En plus des contraintes liées à la diffusion, il faut être capable de gérer un catalogue de contenu de grande taille, et en particulier d'assurer sa disponibilité de manière asynchrone, chaque client voulant voir ce qu'il veut quand il veut.
+
+== Dimensionner
+
+La loi de conservation de la bande passante est un outil tellement simple que beaucoup de gens ont tendance à oublier son existence, alors qu'elle permet à peu de frais de comprendre et de dimensionner (approximativement au moins) un système de distribution. Comme je l'ai précisé dans l'introduction, la première fois que je m'y suis intéressé, c'est lorsque j'ai vu les premières discussions sur la possibilité de partager des fichiers en P2P apparaître sur divers forums.
+
+Ma première réaction fut négative : en effet, dans un réseau, si l'on fait abstraction des données de contrôles, des pertes et autres réplications multicast, le transfert de données peut être comparé à un transfert de matière physique : si Alice envoie un litre de musique à Bob, et si tout se passe bien, un litre de musique part de chez Alice, s'écoule dans le réseau, et un litre de musique finit par arriver chez Bob. Le problème, c'est que les tuyaux de sortie et d'entrée n'ont pas la même taille dans la technologie ADSL, qui est celle employée aujourd'hui pour la plupart des accès domestiques, et la capacité de réception est généralement de $4$ à $20$ fois supérieure à la capacité d'émission. C'est pourquoi j'étais assez crédule quant à l'avenir du pair-à-pair : même si tous les participants ouvraient complètement leurs robinets d'émission, il me semblait que ma baignoire se remplirait toujours moins vite en pair-à-pair que si j'utilisais un serveur capable de saturer mon tuyau d'arrivée.
+
+Cette intuition était fausse. Aujourd'hui, alors que l'on peut télécharger les derniers épisodes des séries en vogue en moins de temps qu'il n'en faut pour faire chauffer une pizza, je me suis forgé une nouvelle intuition, toujours basée uniquement sur la loi de conservation de la bande passante, qui permet de comprendre et de prévoir (dimensionner) le comportement d'un système pair-à-pair.
+
+La clé de mon erreur était que j'avais oublié que dans un réseau pair-à-pair, tout le monde n'est pas simultanément client et serveur (c'est-à-dire _leecher_ pour employer le terme consacré). Il faut tenir compte de ceux qui laissent ouvert leur robinet de sortie sans utiliser celui d'entrée (les _seeders_), et aussi éventuellement, dans le cas de systèmes hybrides, de serveurs dédiés chargés d'épauler le système. Au bout du compte, la bonne manière d'écrire la loi de conservation de la bande passante est
+
+$ sum_(l in L) d(l) = min(D_"max", U_L + U_S + U_E), $ <eq:bandiwdth_conservation>
+
+où $L$, $S$ et $E$ désignent respectivement la population des leechers, des seeders et des serveurs, $U_X$ l'émission totale de la population $X$, et $D_"max"$ la capacité totale de réception des leechers.
+
+Malgré sa simplicité, cette équation mène à des résultats assez fins, dont voici les principaux @benbadis08playing:
+- Pour un système fermé de _streaming_ il existe un seuil de scalabilité qui dépend du débit que l'on veut atteindre, de la capacité moyenne d'émission et du rapport entre $S$ et $L$.
+- En dessous de ce seuil de scalabilité, un système hybride permet de démultiplier la capacité initiale des serveurs, l'amplification dépendant des paramètres évoqués ci-dessus.
+- pour un système ouvert, avec arrivées et départs, on obtient des résultats similaires en considérant l'intensité du processus d'arrivée et le comportements des pairs à la place de la taille des populations.
+- Contrairement à un système fermé, un système ouvert possède une zone de sur-performance, dont la frontière est définie par le comportement des seeders, où les leechers peuvent recevoir à capacité maximale indépendamment de l'intensité d'arrivée. Intuitivement, un système ouvert peut accumuler suffisamment de seeders pour rendre la capacité de transfert arbitrairement grande. Une politique de taux de partage imposé est une bonne manière de se rapprocher de cette zone critique.
+- Pour des systèmes à incitation de type tit-for-tat, à la BitTorrent, il existe un seuil de tolérance aux utilisateurs égoïstes (free-riders). Au-delà de ce seuil, le système n'arrive plus à évacuer les free-riders, qui s'accumulent continuellement dans le système.
+
+== Simplifier
+
+Lorsque la diffusion en léger différé est devenu l'objectif à atteindre en pair-à-pair, les courants théoriques et pratiques ont suivi deux chemins radicalement différents : d'un côté, des solutions théoriques ont été proposées à base d'arbres à noeuds intérieurs disjoints @splitstream @prefixstream. Le problème de ces techniques est que pour diverses raisons que je n'aurais pas la place d'évoquer ici, il n'existe pas à l'heure actuel de client viable basé sur celles-ci. En conséquence, ces approches structurées n'ont pas encore réussi à toucher le grand public.
+
+De l'autre côté, le camp pratique est parti de ce qui marchait déjà, à savoir les applications de partage de fichiers comme BitTorrent, et a cherché à l'adapter à la diffusion. Il en résulte une génération de nouvelles applications comme PPLive @pplive, qui connaissent un succès croissant auprès du grand public. Mais le problème de cette approche, même si le résultat est fonctionnel, est que BitTorrent n'est pas fait pour diffuser du direct. En particulier, alors qu'un flux direct se doit d'être transmis le plus linéairement possible, l'idéal étant de recevoir les morceaux du flux dans l'ordre dans lequel ils ont été créé, BitTorrent est conçu pour pour mélanger autant que possible l'ordre des morceaux afin de maximiser la disponibilité et d'éviter l'apparition d'un morceau _manquant_ @mathieu06missing. Pour contourner cette contradiction, la solution généralement employée est de regrouper les morceaux successifs en macro-morceaux. Chaque macro-morceau pris individuellement est diffusé _à la BitTorrent_, tandis que la récupération des macro-morceaux successifs se fait de manière linéaire, ce qui permet à la fin de lire le flux dans le bon ordre, macro-morceau après macro-morceau. L'inconvénient est qu'au bout du compte les performances obtenues, notamment en terme de délais d'initialisation et de transmission bout-à-bout, sont bien en-deçà des promesses de la théorie.
+
+Face à cette alternative, une troisième voie, qui a retenu mon attention au cours de mes travaux, est celle de la diffusion épidémique. Si je devais donner une unique raison pour justifier mon choix, cela serait leur simplicité (à ne pas confondre avec trivialité). En effet, alors que les algorithmes structurés nécessitent la mise en place d'une structure assez complexe et que les applications actuelles rajoutent un niveau supplémentaire à un algorithme existant qui est déjà lui-même assez élaboré, la conception d'une diffusion épidémique est beaucoup plus simple. Lorsqu'un pair a la possibilité technique d'envoyer un morceau du flux à l'un de ses voisins, il doit répondre aux deux questions suivantes :
+- _À qui doit-il envoyer ?_
+- _Quel morceau doit-il choisir d'envoyer ?_
+
+À chaque manière de répondre à ces deux questions (dont on remarquera qu'elles sont très proches du _Qui récupère quoi de la part de qui ?_ que j'ai proposé pour définir le pair-à-pair) correspond un algorithme de diffusion épidémique. On peut ainsi générer très facilement un nombre quasi-infini d'algorithmes distincts, et évaluer par une analyse théorique ou des simulations leurs performances @bonald08epidemic.
+
+Sans rentrer dans les détails techniques, je dirais à propos de la recherche en cours qu'un consensus semble se dégager quant au choix du morceau (deuxième question) : une fois le destinataire choisi, le plus efficace semble être d'envoyer le dernier morceau utile (_latest useful chunk_), c'est-à-dire le plus récent morceau que la cible ne possède pas encore. Bien que des variations soient encore à l'étude, cette stratégie _latest useful_ donne pour l'instant les meilleures performances en terme de délai.
+
+Pour la première question, le choix du destinataire, la question est encore loin d'être tranchée : on sait que dans certains cas, choisir le destinataire simplement au hasard donne des performances quasi-optimales sur un plan théorique, mais les simulations suggèrent qu'il y a beaucoup de marge dans ce _quasi_. Les recherches actuelles (menées à Orange Labs, mais aussi par d'autres équipes en France et en Europe) visent donc à faire mieux que le choix aléatoire, sachant que pour choisir autrement qu'au hasard, il faut donner à l'émetteur plus d'informations, et qu'il y a un compromis à trouver entre la quantité d'information à faire parvenir à l'émetteur au moment de son choix et la qualité du choix qui en résulte. À l'extrême, on pourrait imaginer un mécanisme où les émetteurs communiquent de manière à se synchroniser et parviennent à créer une diffusion optimale, mais le coût d'une telle technique en terme de messages de contrôle (_overhead_) risquerait fort d'être prohibitif.
+
+== Décentraliser
+
+Enfin, j'aimerais clore ce chapitre sur la distribution de contenu en évoquant brièvement le problème de la vidéo-à-la-demande décentralisée, que j'ai eu l'occasion d'aborder sous l'impulsion de Laurent Viennot @boufkhad08achievable @boufkhad09upload. Ce problème, originalement proposé par Suh _et al._ @diot07push, utilise le fait que de plus en plus de foyers sont équipés d'adjoints de poste de télévision (_set-top-boxes_), qui ont entre autres caractéristiques un disque dur et un accès Internet. D'où cette idée très simple : puisqu'un service de vidéo-à-la-demande nécessite essentiellement pour fonctionner de la capacité de stockage et de la bande passante, pourquoi ne pas construire un service qui repose sur les ressources des _set-top-boxes_ ?
+
+L'intérêt de ce sujet est qu'au-delà des problèmes classiques que l'on rencontre en distribution (bande passante et délai d'initialisation par exemple), on voit apparaître l'existence d'un compromis entre bande passante, capacité de stockage et taux d'échec. Ainsi, si l'on stocke les fichiers vidéos avec une redondance faible, plus la bande passante disponible est proche de la limite nécessaire au bon fonctionnement du service (loi de conservation), plus le risque est grand qu'en pratique, au moment où il faut distribuer une vidéo, les set-top-boxes possédant cette vidéo aient déjà épuisé les ressources réseau nécessaires, entraînant l'échec de la distribution. Pour diminuer le risque d'échec, il faut soit augmenter les capacités réseau, soit augmenter la redondance, et donc mécaniquement diminuer la capacité de stockage disponible#footnote[La manière dont les vidéos sont découpées intervient aussi @boufkhad08achievable @boufkhad09upload.].
+
+Une autre spécificité de ce problème est que bien que des solutions pratiques très simples, à base de choix aléatoires, puissent être mise en oeuvre pour le résoudre de manière presque optimale, la théorie d'allocation sous-jacente est très subtile et assurément non-triviale.

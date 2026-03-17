@@ -1,0 +1,1257 @@
+\documentclass[pdftex,a4paper,10pt]{book}
+%% En 12pt c'est possible aussi
+
+%% packages utilises
+%%---------------------
+%\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[frenchb]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{amssymb,amsmath}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{cwpuzzle}
+\usepackage{a4wide}
+%\usepackage{these}
+
+\usepackage{tabularx}
+%\usepackage{moreverb} %% pour le verbatim en boite
+%\usepackage{slashbox} %% pour couper les colonnes des tableaux en diagonale 
+%\usepackage{showkeys} %% pour voir les labels
+\usepackage{multirow} %% pour regrouper un texte sur plusieurs lignes dans une table
+\usepackage{url} %% pour citer les url par \url
+\usepackage[all]{xy} %% pour la barre au dessus des symboles
+%\usepackage{shorttoc} %% pour plusieurs tables des matières par la commande \shorttableofcontents{Titre}{profondeur}.
+\usepackage{textcomp} %% pour le symbol pour mille par \textperthousand.
+\usepackage{hyperref} %% pour la transformation en PDF, ça permet d'obtenir des liens sur les sections ...
+
+\usepackage[right]{eurosym}
+
+
+%% choix des profondeurs de section pour la table des matières
+%% 2= subsection, 3=subsubsection
+\setcounter{secnumdepth}{3}  %% Avec un numero.
+\setcounter{tocdepth}{1}     %% Visibles dans la table des matieres
+
+%\makeindex %% crée l'index
+%\def\underscore{\char`\_}
+
+\newtheorem{lemma}{Lemme}
+\newtheorem{theorem}{Théorème}
+\newtheorem{corona}{Corollaire}
+\newtheorem{remark}{Remarque}
+\newtheorem{ass}{Approximation}
+
+\newenvironment{soproof}{\noindent \textbf{Idée de la preuve :}}{\hspace{\stretch{1}}$\square$}
+\newenvironment{proof}{\noindent \textbf{Proof:}}{\hspace{\stretch{1}}$\square$}
+
+\newcommand{\ddx}{\, \mathrm{d}x}
+\newcommand{\atoi}[1]{\lfloor #1 \rfloor+1}
+\newcommand{\ime}{^{\text{\emph{ième}}}}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\ed}{\mathrm{e}}
+\newcommand{\prob}{\mathbb{P}}
+\newcommand{\mS}{\mathcal{S}}
+\newcommand{\mD}{\mathcal{D}}
+\newcommand{\mG}{\mathcal{G}}
+\newcommand{\ms}{\mathcal{S}}
+\newcommand{\md}{\mathcal{D}}
+\newcommand{\mg}{\mathcal{G}}
+
+
+\long\def\jump#1\finjump{}
+
+
+%% c'est parti mon kiki !!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\addtocounter{page}{-1}%ça c'est pour revenir à 0
+%\fontfamilly{phv}
+    \thispagestyle{empty}
+    \begin{center}
+    ~\\
+    \vspace{2cm}
+      {\Huge {\textbf{Autour du pair-à-pair}}}\\
+      \vspace{.3cm}
+      {\LARGE {\textbf{distribution de contenus,}}}\\
+      {\LARGE {\textbf{réseaux à préférences acycliques}}}\\
+      \vspace{2.5cm}
+      {\Large 
+        \textbf{Fabien Mathieu}\\[\baselineskip]
+      }
+      \vspace{2.5cm}
+      {\Large
+        \textsl{Habilitation à Diriger des Recherches}\\[\baselineskip]
+      }
+      \vspace{1cm}
+      {\Large
+        Université Pierre et Marie Curie (UPMC -- Paris 6)\\[\baselineskip]
+      }
+      \vspace{2.5cm}
+      Soutenance le 11 février 2009 devant le jury composé de :\\[\baselineskip]
+    \end{center}
+
+\begin{tabular}{l@{\protect\hspace{0.5cm}}r}
+%François Baccelli, DR INRIA & Rapporteur \\
+{\large Pascal Felber, Professeur, Université de Neuchâtel} & {\large Rapporteur}\\
+{\large Pierre Fraigniaud, DR CNRS} & {\large Rapporteur} \\
+{\large Jérôme Galtier, Orange Labs} & {\large Examinateur} \\
+%Robert W. Irving, Senior Lecturer, University of Glasgow & Examinateur \\
+{\large Laurent Massoulié, Thomson Technology Paris Laboratory} & {\large Examinateur} \\
+{\large Philippe Robert, DR INRIA} & {\large Rapporteur} \\
+{\large Sébastien Tixeuil, Professeur, Université Pierre et Marie Curie} & {\large Examinateur} \\
+{\large Laurent Viennot, CR INRIA} & {\large Examinateur} \\
+\end{tabular}
+
+%  \whitepage
+
+
+%% une page blanche (deuxième de couverture)
+\pagestyle{empty}
+
+\newpage\addtocounter{page}{-1}
+~\newpage\addtocounter{page}{-1}
+ 
+%%  une page de citation (pas indispensable)
+\vspace{\stretch{1}}
+\vspace{0.5\linewidth}
+\begin{flushright}
+  %\emph{No physical quantity can continue to change exponentially forever. Your job is delaying forever.}\\
+  \emph{All peers are equal, but some peers are more equal than others.}\\
+  George Orwell, \emph{the server farm}
+\end{flushright}
+\vspace{\stretch{2}}
+
+\vspace{15cm}
+
+V2.1
+
+%% Encore une page blanche pour que les remerciements arrivent
+%%  sur une page impaire 
+
+\newpage\thispagestyle{empty}\addtocounter{page}{-1}
+
+\section*{Remerciements}
+%\remerciements{Il faut vraiment que je dise merci ? :o)}       
+%% vous n'êtes pas obligés d'utiliser cette commande 
+%% mais elle vous donnera une idée de la chose
+
+Les remerciements sont certainement la partie d'un mémoire la plus délicate à écrire. Comme mon père était un grand cruciverbiste, j'ai décidé de lui rendre cet hommage, transférant au passage la difficulté de l'auteur au lecteur. Quelques petites précisions utiles afin d'attaquer ces remerciements dans les meilleures conditions :
+\begin{itemize}
+	\item Beaucoup de définitions font appel à des anecdotes personnelles. Il est donc normal de ne pas pouvoir résoudre toute la grille (en cela, ces remerciements sont somme toute comme les autres).
+	\item J'espère cependant que chacun retrouvera ses cases. Dans le cas contraire, $V31$.
+	\item Pour les organismes vivants, je ne donne que le prénom ou l'espèce. En cas de doublé, une seule entrée sur la grille, mais éventuellement deux définitions.
+	\item Certains mots de la grille ne sont pas des remerciements, mais sont juste là pour diminuer la difficulté (ou l'augmenter selon certains). Ce sont souvent (mais pas toujours) les plus courts.
+\end{itemize}
+%\vspace{.5cm}
+%\PuzzleSolution
+%\PuzzleUnsolved
+\begin{Puzzle}{19}{20}
+|{}|[1]F|{}|{}|{}|{}|{}|{}|{}|[2]G|{}|{}|{}|{}|[3]M|{}|[4]M|.
+|[5]R|A|P|P|O|R|T|E|U|R|S|{}|{}|[6]S|A|[7]F|A|R|I|.
+|{}|M|{}|{}|{}|{}|{}|{}|{}|I|{}|{}|{}|{}|[8]R|A|T|.
+|{}|I|{}|[9]L|I|A|[10]F|A|{}|[11]E|[12]L|[13]F|{}|{}|I|{}|[14]H|[15]P|.
+|[16]P|L|{}|U|{}|{}|A|{}|{}|[17]F|A|B|I|[18]E|N|{}|[19]I|H|.
+|[20]A|L|{}|C|{}|{}|R|{}|{}|{}|U|{}|{}|[21]S|E|R|E|I|[22]N|.
+|[23]S|E|[24]B|A|[25]S|T|I|E|[26]N|{}|R|{}|[27]J|T|{}|{}|[28]U|L|M|.
+|C|*|N|{}|P|{}|D|{}|[29]F|L|E|A|U|{}|{}|{}|{}|I|.
+|[30]A|L|F|{}|O|{}|{}|{}|{}|{}|N|*|L|{}|{}|[31]D|U|P|E|.
+|L|{}|{}|[32]J|U|R|Y|{}|[33]M|A|T|H|I|L|D|E|{}|P|.
+|{}|{}|{}|{}|T|{}|{}|{}|A|{}|{}|{}|E|{}|{}|S|{}|E|.
+|{}|{}|[34]T|[35]H|I|[36]B|A|U|T|{}|[37]G|[38]A|N|G|{}|O|.
+|{}|[39]P|R|U|N|E|{}|{}|R|{}|{}|L|{}|{}|{}|L|{}|[40]R|.
+|[41]J|I|M|{}|E|{}|[42]A|M|I|S|{}|I|{}|[43]D|I|E|G|O|.
+|[44]E|E|{}|{}|{}|{}|N|{}|[45]X|{}|{}|{}|{}|M|{}|{}|{}|B|.
+|[46]R|R|{}|{}|{}|{}|H|{}|{}|{}|{}|{}|{}|I|.
+|[47]O|R|{}|[48]L|[49]E|C|T|E|U|R|[50]S|{}|{}|[51]T|H|O|M|A|[52]S|.
+|[53]M|E|D|I|T|*|U|{}|{}|{}|[54]A|G|[55]I|R|{}|{}|{}|{}|A|.
+|E|{}|{}|P|{}|[56]F|A|N|F|A|N|{}|[57]N|I|D|H|I|{}|R|.
+|{}|{}|{}|6|{}|{}|N|{}|{}|{}|G|{}|{}|{}|{}|{}|{}|{}|A|.
+\end{Puzzle}
+
+\begin{PuzzleClues}{\textbf{Horizontalement}}
+\Clue{5}{}{C'est vilain de le faire, mais je suis content qu'ils aient accepté}
+\Clue{6}{}{Où l'on chasse les têtes}
+\Clue{8}{}{Grosse souris sans fil}
+\Clue{9}{}{Annexe parisienne de Montpellier}
+\Clue{11}{}{Total}
+\Clue{14}{}{Pas Dell}
+\Clue{16}{}{Où l'on inverse la notation}
+\Clue{17}{}{Atos (l'autre)}
+\Clue{19}{}{Système d'autoroutes aux USA}
+\Clue{20}{}{Prénom balafré}
+\Clue{21}{}{Zen}
+\Clue{23}{}{Expert démoniaque}
+\Clue{27}{}{Messe du soir}
+\Clue{28}{}{Rue des grosses têtes}
+\Clue{29}{}{Calamité}
+\Clue{30}{}{Melmacien}
+\Clue{31}{}{S'est fait avoir}
+\Clue{32}{}{Honorable}
+\Clue{33}{}{Blonde insulaire}
+\Clue{34}{}{Fumeur de Drums}
+\Clue{37}{}{Association criminelle se réunissant le MARDI}
+\Clue{39}{}{Fruit indigeste pour les pandas}
+\Clue{41}{}{C'est le meilleur qui s'en va en premier}
+\Clue{42}{}{Là quand on a besoin d'eux}
+\Clue{43}{}{Apprentice}
+\Clue{44}{}{Fin de soirée}
+\Clue{45}{}{Avec ça, on gagne bien sa vie}
+\Clue{46}{}{Au c\oe ur de l'horreur}
+\Clue{47}{}{Rêve de chercheur}
+\Clue{48}{}{Amateurs de plaisir solitaire}
+\Clue{51}{}{Il faut le voir pour le croire}
+\Clue{53}{}{Jase}
+\Clue{54}{}{Faire fait}
+\Clue{56}{}{Une Pomme tombée sur ma tête (merci d'être velu)}
+\Clue{57}{}{Canadienne sans fil}
+\end{PuzzleClues}
+\begin{PuzzleClues}{\textbf{Verticalement}}
+\Clue{1}{}{C'est compliqué}
+\Clue{2}{}{Motif de plainte}
+\Clue{3}{}{Ma hyène}
+\Clue{4}{}{Un homme à marier ?}
+\Clue{7}{}{Sous-sol}
+\Clue{9}{}{Made in Italia}
+\Clue{10}{}{What else ?}
+\Clue{12}{}{Push and Beyond -- Master}
+\Clue{13}{}{Quinze fois rien}
+\Clue{15}{}{Grand prénom du rap -- Amateur de péplums}
+\Clue{16}{}{Le petit se fait rouler (mais pas lui !)}
+\Clue{18}{}{6 heures du mat' les nuits de deadline}
+\Clue{22}{}{Mesure un moment}
+\Clue{24}{}{Tombeau présidentiel}
+\Clue{25}{}{Muridé informaticien (qu'il repose en paix sur son petit nuage de gruyère)}
+\Clue{26}{}{Aux normes}
+\Clue{27}{}{D'artagnan}
+\Clue{31}{}{À ceux qui recherchent vainement leur nom ici (cette marque
+d'affection me va droit au c\oe ur)}
+\Clue{33}{}{Le monde de Neo}
+\Clue{34}{}{Ce n'est pas la taille qui compte}
+\Clue{35}{}{Cocotte}
+\Clue{36}{}{Un bleu qui n'a pas lu}
+\Clue{38}{}{Baba cool}
+\Clue{39}{}{Routeur glouton}
+\Clue{40}{}{Expert de l'égalité}
+\Clue{41}{}{Master of the WebWorld}
+\Clue{42}{}{Aramis}
+\Clue{43}{}{White Russian}
+\Clue{48}{}{Vue imprenable sur la Tour Eiffel}
+\Clue{49}{}{Additif}
+\Clue{50}{}{Liquide mis en banque}
+\Clue{52}{}{Sans hache, j'écris ton nom}
+\Clue{55}{}{À fond de train}
+\end{PuzzleClues}
+
+\begin{center}
+\setlength\unitlength{1cm}
+\vspace{3cm}
+\begin{picture}(10,10)
+\put(0,0){\includegraphics{guided_missile}}
+\put(3.5,0){\includegraphics[width=6cm]{hache}}
+\end{picture}
+\end{center}
+%
+
+\jump
+
+Je remercie avant tout Fanfan, parfois appelé François Durand, qui, à défaut d'être ma muse, a été la pomme tombée sur ma tête.
+
+Les personnes qui m'ont suivi dans ce voyage. La bande des quatre d'origine : Anh-Tuan Gai, Fabien de Montgolfier et Julien Reynier. Puis Dmitri Lebvedev, Laurent Viennot. Les nouveaux Diego Perino et Luca.
+
+Les gens de TRM, et Sara, qui m'a laissé suivre ma piste.
+
+LIAFA, INRIA, et ailleurs. Sébastien Tixeuil, qui m'a expliqué que j'étais entouré de démons sans le savoir.
+
+Mathilde, Thibaut
+
+Famille.
+
+Une petite pensée spéciale pour Spoutine, qui m'a si souvent tenu compagnie lors de mes nuits blanches passées à faire de la recherche. Le hasard a voulu que sa petite vie de rat coïncide avec beaucoup de changements dans ma vie, et en particulier avec mes travaux sur les réseaux à préférences. Qu'il repose en paix sur son petit nuage de gruyère.
+
+Marine,
+
+amis Là quand on a besoin d eux
+Famille On fait comme on peut
+marine Bretonne contrariée
+Fanfan Pomme
+AnhTuan Aramis
+Fabien Atos
+Julien D'Artagnan
+Dmitri White Russian
+Laurent Master
+Diego Apprentice 
+TRM Ce n est pas la taille qui compte
+liafa Laboratoire montpellierain de paris
+inria Laboratoire de mardi
+sebastien maître des démons
+mathilde mmmm
+thibaut tttt
+spoutine sur un nuage de gruyere
+desole pour tous ceux que jai oublie
+public merci d etre venu
+jury merci d etre venu
+rapporteurs c est vilain de le faire mais 
+
+Je tiens également à remercier les membres de mon jury, et tout particulièrement mes rapporteurs. je suis honoré de pouvoir leur présenter mon travail.
+\finjump
+
+\thispagestyle{empty}\addtocounter{page}{-1}
+~\newpage\thispagestyle{empty}\addtocounter{page}{-1}
+\chapter*{Avant-propos}
+\thispagestyle{empty}
+
+La scène se passe dans un débit de boissons, par une longue après-midi d'un mois d'été finissant. Deux amis se prélassent à la terrasse. La bière est fraîche, et la discussion légère. L'objet du débat : l'existence de l'âme s\oe ur et la mesure quantitative de l'amour. Pour l'un des deux protagonistes, l'espace des sentiments est une géométrie extrêmement complexe qui n'admet pas d'extremum absolu. L'adultère n'est alors rien de plus que l'application amoureuse de la méthode d'optimisation dite du \emph{recuit simulé}. De fil en aiguille, le sujet dévie sur un article de \emph{science et vie} qui traite d'un modèle mathématique qui donne, entre autres, une vision très croustillante des relations hommes-femmes.
+
+C'est ainsi que je fis connaissance, en août 2005, avec la théorie des mariages stables. Et que je trouvai sans le savoir mon  principal projet de recherche des trois années à venir, qui finirait par motiver la présente habilitation.
+
+Cela m'amène à remarquer l'analogie entre la recherche et le ski : sur un domaine connu et fréquenté, il y a peu de risques de se perdre. Le terrain est généralement (plus ou moins) bien balisé, et il n'est pas très difficile de savoir quelles sont les pistes intéressantes à descendre.
+
+À l'inverse, un domaine inconnu procure la joie de foncer dans la poudreuse, là où la main du chercheur n'a jamais mis le pied. Mais il faut bien admettre que l'on ne sait en général pas trop où l'on va.
+
+ J'ai ainsi vu des théorèmes d'une puissance extraordinaire se laisser démontrer en quelques minutes, tandis que d'autres ont résisté (et résistent toujours), nuit blanche après nuit blanche, à tous les assauts subis. Qui n'a jamais rêvé de ces graphes de terrain, de ces pairs lointains peuplés de légendes ou d'une richesse soudaine
+qui se conquerrait au détour d'un chemin d'une chaîne de Kieschnick ?
+Qui n'a jamais souhaité voir des équations non locales guider ses pas, au c\oe ur d'une configuration stable, vers la richesse et l'histoire des mystérieuses distributions acycliques ?
+
+Mais je m'éloigne déjà de l'avant-propos pour rentrer dans le vif du sujet. J'espère que le lecteur prendra autant de plaisir à lire ce mémoire que j'en ai pris à l'écrire. Attention cependant, si l'introduction a été écrite de manière à être accessible à un public le plus large possible, il est possible de rencontrer au gré des chapitres quelques formules et idées de preuves. En particulier au cours du chapitre~\ref{sec:pbs}.% J'espère que celles-ci ne rebuteront pas trop.
+
+%Place au spectacle.
+
+
+
+%% pour cacher le numéro de page sur cette page blanche paire
+%% (à virer si vous avez plus d'une page de remerciements.)
+
+%%----------------------------%%
+%%                            %%
+%%  TABLE DES MATIERES        %%
+%%                            %%
+%%----------------------------%%
+
+%\newpage\thispagestyle{empty}
+\thispagestyle{empty}\addtocounter{page}{-1}
+~\newpage\thispagestyle{empty}\addtocounter{page}{-1}
+\tableofcontents%%{Table des matières}
+\thispagestyle{empty}\addtocounter{page}{-1}
+~\newpage\thispagestyle{empty}\addtocounter{page}{-1}
+
+%%----------------------------%%
+%%                            %%
+%%  CHAPITRES PRINCIPAUX      %%
+%%                            %%
+%%----------------------------%%
+
+
+
+
+\chapter{Introduction}
+\pagestyle{headings}
+
+Ce mémoire présente une partie majeure des travaux de recherche que j'ai menés depuis ma thèse de doctorat, soutenue en décembre 2004. Il est centré autour du pair-à-pair (P2P), avec une attention toute spéciale dédiée au thème des réseaux à préférences. Mes travaux situés hors du champ P2P, principalement des travaux autour du PageRank de Google, ne sont pas développés (les références sont disponibles dans le Curriculum Vit\ae~joint à ce mémoire). Les deux principales raisons de ce choix éditorial sont la volonté de présenter un ensemble articulé autour d'une problématique commune (le P2P), ainsi que l'intéressante contrainte posée par la rédaction d'un mémoire de taille limitée.
+
+Dans ce chapitre d'introduction, je propose de partager avec le lecteur ma conception du pair-à-pair, non pas comme le sens commun l'entend, mais en tant que domaine de recherche. S'en suivra au chapitre suivant mon positionnement en tant que chercheur à l'intérieur de ce domaine et la structuration du reste du mémoire.
+
+\section{Histoire subjective du pair-à-pair}
+
+Il existe pléthore de travaux essayant de répondre à la question de savoir ce qu'est le pair-à-pair et comment l'aborder. Les taille, technicité et support sont extrêmement variables : livres~\cite{steinmetz05peer,shen09handbook}, études en ligne et wikilivres~\cite{schuler05etude,panic08world}, introduction pédagogique~\cite{viennot04unefois}\ldots
+
+Face à tout cela, il est difficile de donner une vision des choses qui n'ait pas déjà été proposée ailleurs. C'est pourquoi j'ai choisi de présenter le pair-à-pair en partant de son apparition en tant que phénomène social, vue sous l'angle de mon expérience personnelle. Je ne prétends pas que mon approche soit recommandée pour quelqu'un qui désirerait s'initier au pair-à-pair : il vaut mieux dans ce cas partir d'une des références ci-dessus. Néanmoins, je crois qu'aborder les choses <<~par le petit bout de la lorgnette~>>, comme je m'apprête à le faire, permet de mieux comprendre le cheminement que j'ai suivi dans mes travaux de recherche, et de faire ainsi émerger ce qui les rassemble.
+
+
+Ma propre analyse de l'histoire du pair-à-pair est donc la suivante : j'ai tendance à penser que le pair-à-pair est né au moment où c'était la seule solution technique capable de répondre à un besoin social.  Plus précisément, remontons à il y a à peu près une dizaine d'années. La démocratisation de l'accès à Internet, couplée à des avancés significatives en traitement du signal (connues du grand public au travers des sigles \verb@MP3@ et \verb@DiVX@) commence à rendre possible de récupérer dans des délais raisonnables du <<~contenu~>> audio et vidéo.
+
+Problème, d'où récupérer le contenu ? À l'époque (fin des années $90$), l'économie numérique n'en est qu'à ses balbutiements. Les médias classiques hésitent encore à franchir le pas numérique, et il n'existe bit\footnote{Néo-grammaticalisation inspirée de l'histoire de la \href{http://fr.wikipedia.org/wiki/N\%C3\%A9gation_en_fran\%C3\%A7ais\#Histoire_et_.C3.A9volution_des_.C2.AB_ne_manger_mie_.C2.BB_et_autres_.C2.AB_ne_boire_goutte_.C2.BB}{\emph{négation en français}}.} de portail permettant l'accès au contenu.
+
+Dans un premier temps, des méthodes relativement anciennes sont employées au sein de cercles restreints d'utilisateurs \emph{underground} : utilisation de \emph{FTPz} (piratage d'un serveur FTP anonyme afin d'utiliser les ressources en stockage et bande passante du-dit serveur), pièces jointes des forums de discussions (les \emph{alt.binaries} de Usenet), \ldots
+
+Puis, avec la bulle Internet apparaissent des sites de stockage en ligne. Cette solution est très vite préférée aux \emph{FTPz} : plus besoin de scanner des adresses IP, et risque plus faible de perte des données. L'exemple le plus célèbre de cette époque doit être le site \url{MySpace.com}, qui n'est pas du tout le site de réseau social actuel, mais offre $300$ \texttt{Mo} de stockage par compte, sans limite de nombre de comptes et de bande passante\footnote{\url{http://web.archive.org/web/20001019040949/www.myspace.com/Index.asp}}.
+
+Hélas, un jour, la bulle éclate. Les sites comme \url{MySpace.com} ferment, ou sont complètement bridés dans le meilleur des cas. L'absence de \emph{business model} autour d'une offre de stockage illimitée et gratuite, et les coûts faramineux engendrés par l'utilisation abusive de la bande passante ne sont certainement pas étrangers à cela. Mais une partie des internautes a pris goût à la facilité d'accès au contenu, et ne veut pas revenir en arrière. Le besoin est là. C'est alors que, au gré des forums, une idée commence à émerger : \emph{Et si on mettait en commun nos ressources de stockage et de bande passante ? Avec suffisamment de participants, on aurait plus de ressources qu'avec n'importe quel serveur, non ?}.
+
+Une première tentative, avec le logiciel \emph{Napster}, a déjà tourné court à cause de problèmes légaux. Malgré tout, poussés par le besoin d'accès à du contenu, des logiciels comme \emph{KaZaA} ou \emph{eDonkey}~\cite{edonkey,emule} commencent à voir le jour, tandis que quelque part sur la toile, un informaticien inconnu du nom de Bram Cohen travaille sur un protocole de partage de fichier et utilise des fichiers interdits aux moins de $18$ ans pour tester ce qui allait devenir BitTorrent~\cite{cohen03incentives}\footnote{J'étais tombé par hasard sur la page de test de Bram Cohen en 2004, mais je suis incapable de la retrouver aujourd'hui, et je ne peux donc compter que sur ma seule mémoire pour restituer ce fait. Je ne me souviens même plus du titre exact de l'\oe uvre proposée en téléchargement, mis à part que cela devait être l'opus $4$ ou $6$ d'une série à thème.}. Nous sommes en $2001$ et le pair-à-pair (P2P) naît des cendres des FTPz, de MySpace, et de Napster.
+
+Je dois avouer que lorsque j'ai entendu parler pour la première fois de cette idée d'utiliser les utilisateurs, ma réaction fut de penser \emph{ça ne marchera jamais}. Je ne croyais pas les utilisateurs prêts à offrir leur bande passante, avec toutes les contraintes que cela impliquait. De plus, j'avais à la va-vite estimé les performances d'un tel système à l'aide de la conservation de la bande passante, et j'en avais conclu qu'elles seraient extrêmement mauvaises. Depuis, j'ai eu le temps de réaliser mon erreur et de faire amende honorable, comme j'en parlerai plus en détails au chapitre~\ref{chap:distribution}.
+
+
+Aujourd'hui, le succès des applications de partage de fichiers P2P, qui n'utilisent que les ressources fournies par les utilisateurs, n'est plus à démontrer. L'heure est au développement de nouvelles fonctionnalités, comme par exemple la \emph{lecture en continu}, ou \emph{streaming}. Des applications de diffusion en direct (ou plutôt en léger différé) comme CoolStreaming~\cite{coolstreaming}, PPLive~\cite{pplive}, SopCast~\cite{sopcast}, TVants~\cite{tvants}, ou
+UUSee~\cite{uusee} deviennent de plus en plus populaires, tandis que la diffusion de \emph{vidéos-à-la-demande} commence à apparaître~\cite{joost,kontiki,babelgum}.
+
+%P2P clients are simple: most of the time, for making a P2P version of a server/client application (filesharing, Live or on-demand streaming), you just need to merge the client and server parts of your application into a single P2P application.
+
+
+\section{Définir le pair-à-pair}
+
+Maintenant que le contexte est posé, on peut commencer à réfléchir à la question de la définition du pair-à-pair. Pour illustrer le problème, je me permets de raconter l'anecdote suivante : on a beaucoup parlé récemment de la loi dite \emph{DADVSI} relative aux \emph{droits d'auteur et aux droits voisins dans la société de l'information}. L'un des buts de cette loi était de contrer les usages illégaux du P2P, voire les logiciels P2P potentiellement illégaux. Mais pour légiférer, il faut bien définir, et c'est ce qu'essaie de faire l'article 21 qui rend passible de trois ans d'emprisonnement et 300 000 euros d'amende le fait \emph{d'éditer, de mettre à la disposition du public ou de communiquer au public, sciemment et sous quelque forme que ce soit, un logiciel manifestement destiné à la mise à disposition du public non autorisée d'\oe uvres ou d'objets protégés}.
+
+Cet article a fait couler beaucoup d'encre, notamment parce qu'ainsi rédigé, il incluait la plupart des logiciels de serveurs Web, dont le très connu logiciel Apache. Il a ainsi fallu exclure de manière ad-hoc ces logiciels en rajoutant une clause spéciale. Malgré tout, je trouve intéressante la définition du P2P qui ressort de ce texte de loi : un logiciel P2P est destiné à mettre à disposition du contenu, le sens de contenu étant a priori le plus large possible. 
+
+Cette première définition, que j'appellerai définition de \emph{motivation}, est bien sûr insuffisante pour définir le P2P, comme la loi DADVSI l'a bien mis en évidence. Il faut donc chercher plus loin. C'est généralement là qu'intervient la définition par \emph{opposition} : contrairement au paradigme classique client/serveur, où chaque constituant du système est soit serveur (distributeur de contenu), soit client (consommateur de contenu), le paradigme P2P considère un système où chacun peut être à la fois client et serveur.
+
+Beaucoup plus ciblée que la définition par motivation, la définition par opposition au modèle client/serveur recèle néanmoins une faille lorsque l'on cherche à préciser ce que signifie \emph{pouvoir être à la fois client et serveur}. Observons par exemple le protocole \emph{ssh}, protocole réseau permettant à un client de se connecter à un serveur. Si j'ouvre une session ssh à partir de mon ordinateur vers l'ordinateur d'un ami, il est clair que je ne fais pas de pair-à-pair. Si cet ami ouvre en retour une session ssh sur mon propre ordinateur, chacun aura potentiellement accès aux ressources de l'autre (chaque ordinateur étant à la fois client et serveur), pourtant cela ne ressemble toujours à du pair-à-pair selon le sens commun. Mais si tout un réseau social se met à utiliser des sessions ssh afin de s'échanger du contenu\footnote{C'est le principe de fonctionnement de logiciels existants, comme par exemple \emph{Waste}}, cela finit par former un réseau pair-à-pair, ou plus précisément \emph{d'ami-à-ami} dans ce cas précis. La question est : où est donc la limite ?
+
+Réciproquement, il est très facile d'imaginer des usages client/serveur pour un logiciel P2P. Ainsi, chaque semaine, j'utilise le client BitTorrent pour récupérer des MP3s d'un ami\footnote{Je précise qu'il s'agit d'enregistrements de travail des répétitions du groupe de jazz dont je fais partie, donc tout aussi légaux qu'inaudibles pour le public.}. Lui possède les fichiers, je les récupère, BitTorrent ne servant qu'à faciliter le transfert : les informations permettant la récupération des fichiers sont concentrées dans un petit fichier \texttt{.torrent} qu'il est très facile de produire et de s'échanger par mail. Là encore, la frontière entre paradigme client/serveur et P2P est extrêmement floue.
+
+Il apparaît donc que même si c'est une bonne approximation, la définition par opposition est imparfaite. Tout comme l'on ne peut donc pas définir l'essence du pair-à-pair comme étant liée à une technologie, il n'y a pas de catégorisation architecturale (paradigme) simple où faire rentrer le pair-à-pair.
+
+Tout cela explique pourquoi je me suis forgé au fil du temps ma propre définition du pair-à-pair, qui essaie de capturer au mieux le fait que selon mon expérience, le P2P est avant tout et d'abord une manière décentralisée d'aborder un problème de distribution dans un scénario matériel donné. Autrement dit, si l'on regarde l'évolution du P2P de ses débuts à nos jours, on voit un principe de base rester le même par delà les évolutions technologiques : si l'on veut offrir un service quelconque à un grand nombre d'utilisateurs en n'ayant pas ou peu de serveurs à disposition, la seule solution est de prendre les ressources au seul endroit où elles existent, à savoir chez les utilisateurs (les pairs) eux-mêmes.
+
+%All these P2P applications rely on the same paradigm: if you want to serve a large amount of users with little or no server capacity, you have to take the resources where they are present, that is from the users themselves. 
+
+% graybox was there
+Cette constatation amène à une troisième et dernière définition du P2P, que je décrirais comme une définition par \emph{complexité} : un système, un usage, un scénario est de type \emph{pair-à-pair} dès l'instant où la manière de répondre à la question 
+
+\emph{Qui récupère quoi de la part de qui ?}
+
+\noindent est non-triviale.
+
+
+Cette définition peut sembler étrange et contre-intuitive, mais ses avantages sont certains : elle s'affranchit des questions technologiques et transforme une question sémantique (\emph{qu'est-ce que le pair-à-pair ?}) en une problématique plus algorithmique. Ainsi, pour savoir si un assemblage de connections ssh forme un système P2P, la définition que je propose réponds \emph{oui, à condition que le système soit plus complexe qu'une succession de distribution bilatérales indépendantes}\footnote{En exercice, je laisse le lecteur s'amuser à répondre à la question \emph{Skype est-il un logiciel pair-à-pair ?} à l'aide des trois définitions que je viens de donner.}. En d'autres termes, on pourra parler de pair-à-pair dès que la recherche d'un fichier donné, ou son transfert, utilise plus d'une connection client/serveur.
+
+On obtient aussi, et c'est cela qui m'intéresse en tant que chercheur, une manière de définir ce qu'est la recherche en pair-à-pair : essayer de comprendre la question \emph{qui récupère quoi de la part de qui} quand celle-ci devient compliqué, la décomposer en sous-questions plus spécifiques d'un problème donné (recherche et distribution, disponibilité et volatilité, équité et hétérogénéité,\ldots) et essayer d'y répondre de la meilleure manière possible.
+
+\section{Thématiques de recherche}
+
+Maintenant que le sujet de la recherche en pair-à-pair est ouvert, je propose de survoler les différentes thématiques et approches sur lesquels un chercheur en pair-à-pair peut être amener à travailler. Je propose d'employer une classification dichotomique basée sur quatre axes : localisation/distribution, structuré/non-structuré, push/pull, théorique/empirique. Cette classification est loin d'être unique et elle n'est pas parfaite, mais je la trouve relativement simple et pratique.
+
+\subsection{Localisation et distribution}
+
+La première manière de décomposer la question \emph{Qui récupère quoi de la part de qui ?} est de séparer cette question en deux sous-problèmes : localisation et distribution. La phase de localisation consiste à répondre à la question \emph{Qui possède quoi ?} : c'est la phase de localisation. Une solution est par exemple qu'un serveur central surveille tout le contenu présent dans un système, permettant ainsi de répondre à toute recherche. C'est par exemple le principe de fonctionnement des \emph{trackers} BitTorrent~\cite{cohen03incentives} ou des serveurs \emph{eDonkey}~\cite{emule}. Bien sûr, ces solutions sont centralisées, et donc non pair-à-pair (la question \emph{qui possède quoi} est alors triviale). Un premier pas vers la complexité est l'utilisation de plusieurs serveurs au lieu d'un seul (les super-n\oe uds). On réduit ainsi la concentration d'information, qui peut être dangereuse d'un point de vue de sécurité, mais il faut commencer à réfléchir à la communication entre super-n\oe uds : on a une solution semi-centralisée, semi-complexe, bref semi-pair-à-pair. Enfin, on peut laisser les pairs se débrouiller totalement entre eux pour savoir qui possède quoi. Parmi ces approches pair-à-pair de la localisation, il y par exemple l'inondation (\emph{flooding}), qui consiste à  émettre une demande de contenu et à la faire passer de proche en proche, mais l'approche la plus employée est sans doute celle des \emph{tables de hachage distribuées}~\cite{broose,can,chord,kademlia,pastry,zhao01tapestry}, qui associent à chaque contenu un pair (voire plusieurs) chargé de savoir qui possède ce contenu.
+
+Une fois le contenu localisé se pose alors le problème de sa distribution effective : comment récupérer le contenu ? C'est un problème qui varie énormément suivant ce que l'on entend par distribution : téléchargement d'un petit ou d'un gros fichier, visualisation d'une chaîne en léger différé, d'une vidéo-à-la-demande\ldots Les subtilités liés aux différents types de distribution seront approfondies dans le chapitre~\ref{chap:distribution}. Pour l'instant, on retiendra simplement que le problème exact à résoudre étant variable, la palette des solutions est large : arbres de diffusions, utilisation de files d'attente, échanges réciproques\ldots
+
+La plupart du temps, ces deux problèmes, localisation et distribution, sont indépendants. Par exemple, si la localisation dans un système BitTorrent est historiquement assurée par un tracker centralisé, les versions récentes offrent aussi la possibilité de recourir à une DHT. De même, le choix du protocole de distribution peut s'adapter en fonction du résultat de la localisation : c'est l'approche multi-protocoles, employée par MLDonkey~\cite{fessant03mldonkey}.
+
+Bien sûr, il y a des exceptions, et la distinction entre localisation et distribution n'est pas toujours hermétique. Ainsi, pour des raisons de sécurité et de confidentialité, le logiciel Freenet~\cite{clarke01freenet} est conçu de telle sorte que la distribution emprunte le même chemin réseau que celui créé au moment de la localisation, rendant les deux problèmes indissociables. 
+
+
+\subsection{Stucturé, non-structuré}
+
+
+Une autre manière d'aborder la question \emph{qui-quoi-de-qui} est de réfléchir à la manière dont on va résoudre le problème en pratique. De ce point de vue, deux courant majeurs existent : les approches structurées et auto-structurées.
+
+Le principe des approches structurées est de faire en sorte que les pairs se conforment à une structure pré-déterminée. Cette structure va guider les pairs dans leur comportement et leur manière d'échanger des messages ou du contenu. La plupart des tables de hachage distribuées  utilisent un algorithme structuré~\cite{broose,can,chord,kademlia,pastry,zhao01tapestry}. Des solutions structurées ont également été proposées pour résoudre le problème de la diffusion en léger différé~\cite{splitstream,prefixstream}.
+
+Les dites structures sont généralement des graphes (arbres, arbres à n\oe uds intérieurs disjoints~\cite{splitstream}, graphes de de Brujin~\cite{broose,prefixstream}, graphes réguliers, \ldots), parfois construits à partir d'une topologie virtuelle (anneau~\cite{chord,kademlia}, $d$-tore~\cite{can}, hypercube~\cite{chord,kademlia,pastry,zhao01tapestry}, \ldots).
+
+La force des approches structurées est que le comportement du système est déterminé par une structure connue à l'avance, et que celle-ci peut être conçue pour garantir des performances optimales, ou quasi-optimales. Leur faiblesse vient des difficultés à maintenir une structure face à la volatilité des pairs. De plus, beaucoup de structures supposent que les pairs ont des capacités similaires, et à de rares exceptions près \cite{sung06enabling}, elles s'adaptent mal à une population souvent hétérogène dans les faits.
+
+%The main strength of structured approaches is that the behavior of the system is determined by a known structure, which can be designed to ensure optimal or quasi-optimal performance. However, maintaining a structure when there is churn (arrivals and departures of peers) can be costly. Moreover, most structures assume that peers have similar capacities, and can have difficulties to handle heterogeneous peers.
+
+L'autre solution est de laisser (plus ou moins) les pairs se débrouiller, c'est-à-dire les laisser prendre des décisions en fonction de leur propre perception du système. Il n'y a alors plus de structure explicite, mais une pseudo-structure floue et implicite résultant de la somme de choix locaux. C'est pourquoi, d'ailleurs, je préfère le terme \emph{auto-structuré} au terme \emph{non-structuré} qui est généralement employé. Après tout, une structure n'est, par définition, que \emph{la manière dont un ensemble est agencé}. Par exemple, avec toutes les propriétés qu'il possède (degré moyen, composantes connexes, diamètre, \ldots), le graphe d'Erdös-Rényi, qui est construit à partir de décisions locales (cette arête est-elle dans le graphe ?), est pour moi l'exemple parfait d'auto-structure. 
+
+L'approche auto-structurée, dont l'un des exemples les plus représentatifs est certainement BitTorrent, est principalement employée dans la distribution du contenu, que ce soit en partage de fichier ou pour la lecture en continu. Elle est utilisée en localisation dans certains systèmes comme Freenet ou Gnutella, et peut apparaître sous une forme hybridée (comme dit précédemment, aucun cloisonnement n'est complètement rigide) dans certaines DHTs~\cite{broose,kademlia}.
+
+Par construction, les approches auto-structurées sont adaptées à la volatilité et l'hétérogénéité des pairs. Mais comme leur structure n'est pas connue \emph{a priori}, il est délicat de prédire leurs performances, et la validation doit souvent être faite de manière empirique. Cependant, des avancées ont été faites afin de donner aux systèmes auto-structurés une base théorique~\cite{qiu04modeling,DBLP:conf/icdcs/GaiMMR07,bonald08epidemic}.
+
+\subsection{Push et Pull}
+
+On peut aussi caractériser, d'un point de vue recherche, la nature d'un système pair-à-pair, en regardant où les décisions sont prises : au niveau de la partie client (\emph{pull}), de la partie serveur (\emph{push}), ou un peu des deux.
+
+Dans une approche pull, le demandeur d'un contenu va lui-même initier la distribution auprès des possesseurs du contenu\footnote{Je rappelle qu'en pair-à-pair, il faut prendre demandeur et possesseur d'un point de vue logique, le possesseur d'une partie de contenu pouvant être simultanément demandeur d'une autre partie de ce même contenu.}, en décidant éventuellement quelle partie récupérer de qui. C'est le genre d'approche employée dans les principaux systèmes de partage de fichiers actuels (BitTorrent et eDonkey).
+
+À l'inverse, la philosophie push veut que ça soit les possesseurs qui gèrent le bon fonctionnement du système, les demandeurs ayant un rôle  plus passif. Les systèmes de distribution basés sur des arbres de diffusion, où le contenu est routé de la source aux destinataires, sont généralement considérés comme typiques du push~\cite{splitstream,prefixstream}.
+
+Comme on peut le voir dans les exemples précédents, cette classification est généralement associée à la problématique de la distribution. La raison est que les principales solution de localisation, les DHTs (mais aussi les solutions de localisation centralisées), font un peu des deux : les possesseurs transmettent de manière pro-active la description de leur contenu à un tiers, et les demandeurs vont par la suite chercher ces descriptions. Cette approche de type \emph{publish/suscribe} peut malgré tout être interprétée, conceptuellement, comme un cas particulier d'hybridation push/pull.
+
+Une autre idée reçue (que j'ai volontairement reproduite dans les exemples qui précédent) consiste à associer la distribution push aux systèmes structurés et la distribution pull aux systèmes auto-structurés. Intuitivement, cette association est facile à justifier : en approche pull, chaque demandeur organise lui-même la manière dont il récupère le contenu, et on peut penser qu'une structure trop rigide risquerait d'amoindrir la marge de man\oe uvre. Réciproquement, laisser un ensemble de possesseurs gérer la distribution d'un contenu semble voué à l'échec sans un minimum de concertation, c'est-à-dire de structure.
+Et pourtant, les algorithmes de diffusion épidémiques~\cite{bonald08epidemic}, dont je parlerai plus en détails au cours du chapitre~\ref{chap:distribution} sont clairement orientés push (avec une légère rétroaction pull, précisons-le), auto-structurés, et malgré tout promis à un avenir je l'espère brillant. 
+
+\subsection{Théorique, empirique}
+
+Au-delà des trois critères que je viens de décrire, qui sont liés aux problématiques propres du pair-à-pair, je crois qu'il est aussi nécessaire de considérer la distinction entre théorie et pratique. C'est une classification (voire un clivage parfois) qui a des origines épistémologiques très lointaines, mais dont les répercussions sur le pair-à-pair sont largement aussi importantes que les distinctions évoquées plus haut. Pour reprendre une définition empruntée à Matthieu Latapy, l'approche théorique (ou plus généralement de la recherche fondamentale) cherche en priorité à \emph{comprendre}, tandis que le but de l'approche empirique est avant tout de \emph{faire} (recherche appliquée).
+
+En étant un peu caricatural, le partisan d'une approche purement empirique dénigrera toute recherche qui n'a pas été validée par une série d'expériences en conditions réelles. C'est par exemple la position défendue par Bram Cohen, le concepteur de BitTorrent\footnote{Cette position est parfaitement apparente si l'on consulte son blog, notamment son billet à charge contre le protocole Avalanche : \url{http://bramcohen.livejournal.com/20140.html}.}. À l'inverse, l'approche purement théorique va chercher à proposer des solutions dont on peut montrer qu'elles doivent marcher, ou des modèles dont on peut penser qu'ils capturent l'essence d'un phénomène. C'est ainsi que procèdent la plupart des solutions structurées citées plus haut, ou encore la modélisation fluide de BitTorrent proposée par Qiu et Srikant~\cite{qiu}.
+
+Dans l'absolu, chacune des deux approches prise à l'état pur est incomplète, et c'est seulement combinées qu'elles peuvent exprimer pleinement leur potentiel. Soit en proposant une théorie permettant de comprendre des observations (induction), soit en essayant de falsifier (au sens épistémologique) une théorie à travers une série d'expériences. Ce n'est hélas pas toujours aisé, le cloisonnement croissant des domaines n'aidant pas vraiment à réaliser ce grand écart, et un travail de recherche donné (y compris en pair-à-pair) sera toujours perçu avec une couleur plus empirique ou plus théorique, la nuance exacte dépendant bien sûr de l'\oe il de l'observateur.
+
+\subsection{Synthèse}
+
+Comme les exemples donnés ci-dessus l'ont illustré, la classification que je propose est loin d'être un cloisonnement rigide, et il faut plutôt la voir comme une boussole permettant d'essayer de s'orienter à l'intérieur du domaine de recherche du pair-à-pair. Les systèmes deviennent de plus en hybrides et mélangent des genres supposés antagonistes. Il n'est plus possible, et ce n'est pas forcément une mauvaise chose, d'isoler complètement les thématiques comme ce fut le cas à une époque où les principaux thèmes abordés étaient les propositions de DHTs (localisation, structuré, publish/suscribe, théorique) et les études de traces réelles (localisation ou distribution suivant la trace, empirique).
+
+\chapter{Positionnement}
+
+S'il apparaît clairement, au travers de mes travaux, que ma principale thématique de recherche est le pair-à-pair, je suis conscient qu'il n'est pas forcément évident d'identifier le fil conducteur qui unifie mon travail, même si les concepts de distribution et d'auto-structure apparaissent souvent dans le cadran de la boussole : dimensionnement générique de la distribution avec la loi de conservation de la bande passante~\cite{benbadis08playing} ; distribution épidémique en léger différé, c'est-à-dire auto-structurée et pull~\cite{bonald08epidemic} ; distribution décentralisée de vidéo-à-la-demande (auto-structurée, avec une phase push et une phase pull) ; modélisation d'auto-structure avec l'ensemble de mes travaux sur les réseaux à préférences~\cite{mathieu09acyclic}.
+
+Afin de mieux comprendre mon parcours, voici les trois qualités que j'essaie de réunir autant que possible lorsque je pratique la recherche. Je tiens bien sûr à préciser que ce ne sont en aucun cas les qualités qui définissent un bon chercheur d'une manière générale, car je pense que chaque chercheur a son propre profil, sa propre personnalité, et donc ses propres qualités à développer afin de s'épanouir sur le plan professionnel.
+
+\begin{description}
+	\item[Curiosité] J'aime découvrir de nouvelles thématiques. Qui plus est, j'apprécie particulièrement lorsque les sujets que j'attaque n'ont pas encore été étudiés, ou très peu. En effet, cette curiosité me pousse souvent à déborder ou dévier de mes intentions initiales, et j'ai toujours la crainte, quand je découvre des résultats que je trouve nouveaux et intéressants, de découvrir par la suite que ces résultats sont connus depuis longtemps. C'est pourquoi, après un doctorat dont le sujet était le PageRank de Google, sujet d'actualité à l'époque, je me suis tourné quasi-naturellement vers les thématiques émergentes du pair-à-pair, mais en privilégiant la modélisation de la distribution, sujet relativement peu abordé à l'époque compte tenu de son importance.
+	\item[\'Ecoute] Je suis un partisan du discontinuisme scientifique, dans le sens où je ne crois pas que la science évolue selon une progression continue, maîtrisée et quantifiable, mais au contraire qu'elle est la somme de ruptures abruptes. À une plus modeste échelle, qui est la mienne, j'applique cette théorie en m'efforçant de repérer les micro-ruptures qui peuvent passer à ma portée : j'écoute et j'observe, sautant sur l'occasion d'explorer de nouvelles pistes, issues de mon domaine, d'autres domaines, voire de ma sphère privée. L'exemple le plus extrême est celui de la naissance des réseaux à préférences acycliques, relaté dans l'avant-propos, mais la plupart des autres thématiques que j'ai étudiées sont aussi basées sur l'écoute et l'observation des autres. Ainsi, mes déboires personnels de téléchargement en pair-à-pair m'ont amené à étudier les mécanismes de diffusion dans la distribution de fichiers~\cite{mathieu06missing}. Quelques années plus tard, écoutant un exposé de Laurent Massoulié, j'ai réalisé que ce que j'avais fait présentait beaucoup de ressemblances avec la diffusion épidémique, ce qui m'a poussé à explorer cette thématique.
+	\item[Intuition] Enfin, je suis incapable de travailler sur un sujet sans en avoir une compréhension intuitive forte, soit initiale, soit acquise au cours des travaux préliminaires. C'est d'ailleurs autant un défaut qu'une qualité. C'est une qualité car l'intuition rend les choses simples, et facilite la communication de l'essence de ses travaux aux autres. Elle permet de présenter son sujet en escamotant les difficultés techniques, le rendant plus attrayant. C'est un défaut quand les idées qu'elles donnent dépassent la possibilité de les traiter proprement\footnote{<<~Le succès c'est 1 \% d'inspiration et 99 \% de transpiration !~>>, \emph{Albert EINSTEIN}}. Faute de temps et de compétence technique adéquate, je traîne ainsi dans mes placards un certain nombre de conjectures dont je \emph{sens} qu'elles sont vraies sans arriver à les résoudre.
+\end{description}
+
+Enfin, j'aimerais discuter du positionnement de ma recherche sur le curseur qui va de la théorie (comprendre) à la pratique et à l'empirique (faire). S'il fallait me placer dans l'absolu, ce qui est discutable, j'estime que la recherche que je mène se positionne principalement à un niveau théorique. Personnellement, et à cause de mon parcours à la frontière de l'académie et de l'industrie, je préfère me considérer comme un intermédiaire. C'est une situation agréable lorsqu'elle permet d'apporter un éclairage théorique à un phénomène concret ou de transformer une équation en application concrète. Elle l'est moins lorsque je réalise à quel point mes compétences individuelles, prises séparément, sont faibles comparées aux ténors de chaque \emph{camp}. Mes compétences en programmation ne me permettent guère d'aller au-delà du stade de la simulation, et à ma trousse à outils mathématiques est moins fournie que celle de bien des chercheurs que je connais. Mais j'ai pris le parti de tourner ce que je considère comme une faiblesse personnelle en avantage, et plutôt que de chercher une compétition que je suis sur de perdre dans les deux domaines de la théorie et de la pratique, je préfère me voir comme un passeur entre deux mondes qui idéalement devraient n'en former qu'un.
+
+\section*{Organisation du mémoire}
+\label{subsec:outline}
+
+Ce mémoire est structuré en trois chapitres. Le chapitre\ref{chap:distribution} s'intéresse aux travaux que j'ai mené autour du problème de la distribution de contenu. C'est un chapitre de synthèse, où j'essaie de donner les idées principales de ces travaux, articulées autour de trois sous-thèmes : la loi de la bande passante (dimensionner), la diffusion épidémique (simplifier), la vidéo-à-la-demande (décentraliser).
+
+Vient ensuite le c\oe ur de ce mémoire, le chapitre~\ref{sec:pbs}, qui expose mes travaux sur les réseaux à préférences acycliques. En écrivant ce mémoire, j'avais une volonté très forte de donner une vision globale et unifiée de ce domaine que j'ai découvert il y a maintenant un peu plus de trois ans, c'est pourquoi j'y suis un peu plus exhaustif que pour un simple chapitre de synthèse.
+
+Je termine naturellement par un chapitre conclusif, qui a pour but de replacer mes travaux dans le contexte du P2P à la fois au sens où je l'ai défini, mais aussi dans sa compréhension courante. De cette synthèse ressortent les futurs axes de recherche qui de mon point de vue méritent d'être étudiés afin de pouvoir appréhender pleinement les évolutions à venir autour de la philosophie P2P.
+
+
+%This chapter is structured as follows: in Section~\ref{sec:pbs},we give the basics of preference-based systems. This includes the notation, the p.b.s. convergence theorem, and a description of P2P-relevant preference classes. Section~\ref{sec:self} is then devoted to deepen the convergence theorem in order to give tighter convergence bounds depending on the preference class. Section~\ref{sec:stable} describes the stable configurations of acyclic systems. Lastly, Section~\ref{sec_conclusion} concludes the chapter.
+
+\chapter{Distribution de contenu}
+\label{chap:distribution}
+
+L'objet de ce chapitre est de faire le tour des problématiques liées à la distribution de contenu dans une approche pair-à-pair, en se focalisant sur les thèmes que j'ai personnellement abordé au cours de mes recherches. Je commence par préciser ce que j'entends exactement par \emph{distribution de contenu} (partage de fichier, diffusion en léger différé, vidéo-à-la-demande), en soulignant les enjeux spécifiques et communs de chaque type de distribution. Je parle ensuite de trois problématiques spécifiques : dimensionnement en bande passante (générique à tous les types de distribution), diffusion épidémique (léger différé), et vidéo-à-la-demande décentralisée
+
+\section{Distribuer}
+
+Lorsque je parle de distribution, je pense avant tout à du contenu de grande taille : programmes et OS informatiques, fichiers musicaux, film en DivX, chaîne diffusée en haute définition\footnote{La diffusion de contenu de très petite taille (par exemple un système de petites annonces pair-à-pair), du fait de l'inexistence de la bande passante comme paramètre limitant, obéit à des enjeux radicalement différents de ceux que je vais présenter ici.}. Pour ce genre de contenu ayant besoin de grandes ressources réseaux, on peut distinguer grossièrement trois manières d'effectuer la distribution : partage de fichier, diffusion en léger différé et diffusion \emph{à-la-demande}.
+
+\subsection{Partage de fichier}
+
+Historiquement, l'application reine du pair-à-pair en distribution est le partage de fichiers, dont le succès n'est je pense plus à démontrer. Comme dans le cas d'un téléchargement classique (non pair-à-pair), il s'agit d'une application de type \emph{best effort} par nature, et le temps de téléchargement effectif constitue la principale métrique. D'un point de vue réseau, un enjeu est donc d'arriver à utiliser de manière optimale les ressources disponibles, afin de minimiser ce temps de téléchargement. La garantie d'une certaine pérennité du contenu partagé (éviter les téléchargements impossibles) joue également un rôle.
+
+\subsection{Diffusion \emph{streaming}}
+
+Une application de \emph{streaming} a pour but de transmettre un contenu multimedia à des fins de visualisation ou d'écoute. Ce genre d'application n'est pas du tout \emph{best effort}, contrairement au partage de fichier, car des contraintes apparaissent au moment de la lecture du contenu (principalement, il faut s'assurer que la partie du contenu que l'on veut lire soit là quand on on en a besoin). Parmi les métriques communes à toute diffusion, il y a :
+\begin{description}
+	\item[La qualité] en première a approximation, elle est proportionnelle au débit du flux, même si d'autres paramètres rentrent en compte, comme le choix de l'encodage ou le taux de pertes.
+	\item[Le délai d'initialisation] c'est le temps qui s'écoule entre le moment où l'on décide de regarder un contenu et celui où celui-ci commence à être lu.
+\end{description}
+D'un point de vue réseau, l'enjeu est d'arriver à
+\begin{itemize}
+	\item maximiser le débit utile, notamment en minimisant les messages de contrôle (\emph{overhead}),
+	\item minimiser les pertes,
+	\item minimiser le délai de transmission (réseau).
+\end{itemize}
+Ces trois paramètres sont étroitement reliés entre eux en pair-à-pair. Par exemple, il est généralement possible de réduire le délai de transmission au prix de pertes ou d'un overhead plus élevés. Tout l'art de la conception d'un système de diffusion consiste alors à trouver le bon compromis.
+
+\subsubsection{léger différé}
+\vspace{-.3cm}
+Le streaming en léger différé (le terme \emph{direct} étant quelque peu présomptueux sur Internet) cherche à diffuser un évènement qui est en train de se produire, par exemple un match de football. En plus des contraintes liées à toute diffusion sur Internet, le principal enjeu du léger différé est d'arriver à minimiser le délai de transmission de bout-en-bout, c'est-à-dire le temps qui s'écoule entre le moment où un but est marqué (et donc où l'on entend ses voisins, qui regardent le match à la télévision, crier) et celui où on peut le voir sur son écran d'ordinateur. D'un point de vue réseau, les enjeux sont les mêmes que pour le streaming en général, mise à part que l'importance du délai de transmission est accrue. La nature même du léger différé crée aussi des avantages et des inconvénients spécifiques. Par exemple, il n'est pas nécessaire de se préoccuper de l'existence du contenu (il est directement injecté dans le système), mais il faut pouvoir satisfaire un grand nombre de personnes regardant un même contenu de manière quasi-synchrone.
+
+
+%
+%The second major type of streaming application is Live. When watching a Live event, there is the usual streaming metrics (quality, start-up delay) plus the play-out delay (delay between the live event and its display on the screen). This play-out delay is a major concern when dealing with sport events, and is the major technical challenge specific to live.
+%
+%Live is made of channels, whereas VoD was made of videos. There is roughly one behavior per channel (watching the current channel event), which limits the behavior issues to zapping between channels.
+
+	
+\subsubsection{Vidéo-à-la-demande (VoD)}
+\vspace{-.3cm}
+
+La vidéo-à-la-demande consiste principalement à associer un système de partage de fichiers à un système de streaming. En plus des contraintes liées à la diffusion, il faut être capable de gérer un catalogue de contenu de grande taille, et en particulier d'assurer sa disponibilité de manière asynchrone, chaque client voulant voir ce qu'il veut quand il veut. 
+
+%Video-on-Demand consists basically in adding streaming capabilities to a filesharing system. Specific metrics are, for instance, the size of the catalog offered by the system and its availability (anywhat, anywhen).
+%
+%The difficulty with VoD systems is that each user may have a distinct behavior. Thus, even if some temporal (prime time) and content (blockbusters) correlations can exist,the system should be able to handle asynchronous, independent behaviors.
+
+
+%The main aspects of FileSharing, Live and VoD are summarized in Table~\ref{tab:content}.
+%
+%\begin{table}
+%	\begin{tabular}{|c|c|c|c|}
+%		\hline
+%		& FileSharing & Video-on-Demand & Live \\
+%		\hline
+%		Streaming? & No & Yes & Yes \\
+%		\hline
+%Specific QoS & Best effort & Anywhat anywhen & play-out delay \\
+%		\hline
+%	Content & N/A & Known in advance (+) & Created on the fly (-)\\
+%	\hline
+%	Users' behavior & N/A & Multiple (-) & One per channel (+)\\	
+%		\hline
+%	\end{tabular}
+%	\caption{Types of content distribution. (+) means technical advantage, (-) means technical issue.}
+%	\label{tab:content}
+%\end{table}
+
+
+
+\section{Dimensionner}
+
+La loi de conservation de la bande passante est un outil tellement simple que beaucoup de gens ont tendance à oublier son existence, alors qu'elle permet à peu de frais de comprendre et de dimensionner (approximativement au moins) un système de distribution. Comme je l'ai précisé dans l'introduction, la première fois que je m'y suis intéressé, c'est lorsque j'ai vu les premières discussions sur la possibilité de partager des fichiers en P2P apparaître sur divers forums.
+
+Ma première réaction fut négative : en effet, dans un réseau, si l'on fait abstraction des données de contrôles, des pertes et autres réplications multicast, le transfert de données peut être comparé à un transfert de matière physique : si Alice envoie un litre de musique à Bob, et si tout se passe bien, un litre de musique part de chez Alice, s'écoule dans le réseau, et un litre de musique finit par arriver chez Bob. Le problème, c'est que les tuyaux de sortie et d'entrée n'ont pas la même taille dans la technologie ADSL, qui est celle employée aujourd'hui pour la plupart des accès domestiques, et la capacité de réception est généralement de $4$ à $20$ fois supérieure à la capacité d'émission. C'est pourquoi j'étais assez crédule quant à l'avenir du pair-à-pair : même si tous les participants ouvraient complètement leurs robinets d'émission, il me semblait que ma baignoire se remplirait toujours moins vite en pair-à-pair que si j'utilisais un serveur capable de saturer mon tuyau d'arrivée.
+
+Cette intuition était fausse. Aujourd'hui, alors que l'on peut télécharger les derniers épisodes des séries en vogue en moins de temps qu'il n'en faut pour faire chauffer une pizza, je me suis forgé une nouvelle intuition, toujours basée uniquement sur la loi de conservation de la bande passante, qui permet de comprendre et de prévoir (dimensionner) le comportement d'un système pair-à-pair.
+
+La clé de mon erreur était que j'avais oublié que dans un réseau pair-à-pair, tout le monde n'est pas simultanément client et serveur (c'est-à-dire \emph{leecher} pour employer le terme consacré). Il faut tenir compte de ceux qui laissent ouvert leur robinet de sortie sans utiliser celui d'entrée (les \emph{seeders}), et aussi éventuellement, dans le cas de systèmes hybrides, de serveurs dédiés charger d'épauler le système. Au bout du compte, la bonne manière d'écrire la loi de conservation de la bande passante est
+\begin{equation}
+	\sum_{l\in L}d(l)=\min(D_{\max},U_L+U_S+U_E)\text{,}
+	\label{eq:bandiwdth_conservation}
+\end{equation}
+\noindent où $L$, $S$ et $E$ désignent respectivement la population des leechers, des seeders et des serveurs, $U_X$ l'émission totale de la population $X$, et $D_{\max}$ la capacité totale de réception des leechers.
+
+Malgré sa simplicité, cette équation mène à des résultats assez fins, dont voici les principaux~\cite{benbadis08playing}:
+\begin{itemize}
+	\item Pour un système fermé de \emph{streaming} il existe un seuil de scalabilité qui dépend du débit que l'on veut atteindre, de la capacité moyenne d'émission et du rapport entre $S$ et $L$.
+	\item En dessous de ce seuil de scalabilité, un système hybride permet de démultiplier la capacité initiale des serveurs, l'amplification dépendant des paramètres évoqués ci-dessus.
+	\item pour un système ouvert, avec arrivées et départs, on obtient des résultats similaires en considérant l'intensité du processus d'arrivée et le comportements des pairs à la place de la taille des populations.
+	\item Contrairement à un système fermé, un système ouvert possède une zone de sur-performance, dont la frontière est définie par le comportement des seeders, où les leechers peuvent recevoir à capacité maximale indépendamment de l'intensité d'arrivée. Intuitivement, un système ouvert peut accumuler suffisamment de seeders pour rendre la capacité de transfert arbitrairement grande. Une politique de taux de partage imposé est une bonne manière de se rapprocher de cette zone critique.
+	\item Pour des systèmes à incitation de type tit-for-tat, à la BitTorrent, il existe un seuil de tolérance aux utilisateurs égoïstes (free-riders). Au-delà de ce seuil, le système n'arrive plus à évacuer les free-riders, qui s'accumulent continuellement dans le système.
+\end{itemize}
+
+\section{Simplifier}
+
+Lorsque la diffusion en léger différé est devenu l'objectif à atteindre en pair-à-pair, les courants théoriques et pratiques ont suivi deux chemins radicalement différents : d'un côté, des solutions théoriques ont été proposées à base d'arbres à n\oe uds intérieurs disjoints~\cite{splitstream,prefixstream}. Le problème de ces techniques est que pour diverses raisons que je n'aurais pas la place d'évoquer ici, il n'existe pas à l'heure actuel de client viable basé sur celles-ci. En conséquence, ces approches structurées n'ont pas encore réussi à toucher le grand public.
+
+De l'autre côté, le camp pratique est parti de ce qui marchait déjà, à savoir les applications de partage de fichiers comme BitTorrent, et a cherché à l'adapter à la diffusion. Il en résulte une génération de nouvelles applications comme PPLive~\cite{pplive}, qui connaissent un succès croissant auprès du grand public. Mais le problème de cette approche, même si le résultat est fonctionnel, est que BitTorrent n'est pas fait pour diffuser du direct. En particulier, alors qu'un flux direct se doit d'être transmis le plus linéairement possible, l'idéal étant de recevoir les morceaux du flux dans l'ordre dans lequel ils ont été créé, BitTorrent est conçu pour pour mélanger autant que possible l'ordre des morceaux afin de maximiser la disponibilité et d'éviter l'apparition d'un morceau \emph{manquant}~\cite{mathieu06missing}. Pour contourner cette contradiction, la solution généralement employée est de regrouper les morceaux successifs en macro-morceaux. Chaque macro-morceau pris individuellement est diffusé \emph{à la BitTorrent}, tandis que la récupération des macro-morceaux successifs se fait de manière linéaire, ce qui permet à la fin de lire le flux dans le bon ordre, macro-morceau après macro-morceau. L'inconvénient est qu'au bout du compte les performances obtenues, notamment en terme de délais d'initialisation et de transmission bout-à-bout, sont bien en-deçà des promesses de la théorie. 
+
+Face à cette alternative, une troisième voie, qui a retenu mon attention au cours de mes travaux, est celle de la diffusion épidémique. Si je devais donner une unique raison pour justifier mon choix, cela serait leur simplicité (à ne pas confondre avec trivialité). En effet, alors que les algorithmes structurés nécessitent la mise en place d'une structure assez complexe et que les applications actuelles rajoutent un niveau supplémentaire à un algorithme existant qui est déjà lui-même assez élaboré, la conception d'une diffusion épidémique est beaucoup plus simple.  Lorsqu'un pair a la possibilité technique d'envoyer un morceau du flux à l'un de ses voisins, il doit répondre aux deux questions suivantes
+\begin{itemize}
+	\item \emph{À qui doit-il envoyer ?}
+	\item \emph{Quel morceau doit-il choisir d'envoyer ?}
+\end{itemize}
+
+À chaque manière de répondre à ces deux questions (dont on remarquera qu'elles sont très proches du \emph{Qui récupère quoi de la part de qui ?} que j'ai proposé pour définir le pair-à-pair) correspond un algorithme de diffusion épidémique. On peut ainsi générer très facilement un nombre quasi-infini d'algorithmes distincts, et évaluer par une analyse théorique ou des simulations leurs performances~\cite{bonald08epidemic}. 
+
+Sans rentrer dans les détails techniques, je dirais à propos de la recherche en cours qu'un consensus semble se dégager quant au choix du morceau (deuxième question) : une fois le destinataire choisi, le plus efficace semble être d'envoyer le dernier morceau utile (\emph{latest useful chunk}), c'est-à-dire le plus récent morceau que la cible ne possède pas encore. Bien que des variations soient encore à l'étude, cette stratégie \emph{latest useful} donne pour l'instant les meilleures performances en terme de délai.
+
+Pour la première question, le choix du destinataire, la question est encore loin d'être tranchée : on sait que dans certains cas, choisir le destinataire simplement au hasard donne des performances quasi-optimales sur un plan théorique, mais les simulations suggèrent qu'il y a beaucoup de marge dans ce \emph{quasi}. Les recherches actuelles (menées à Orange Labs, mais aussi par d'autres équipes en France et en Europe) visent donc à faire mieux que le choix aléatoire, sachant que pour choisir autrement qu'au hasard, il faut donner à l'émetteur plus d'informations, et qu'il y a un compromis à trouver entre la quantité d'information à faire parvenir à l'émetteur au moment de son choix et la qualité du choix qui en résulte. À l'extrême, on pourrait imaginer un mécanisme où les émetteurs communiquent de manière à se synchroniser et parviennent à créer une diffusion optimale, mais le coût d'une telle technique en terme de messages de contrôle (\emph{overhead}) risquerait fort d'être prohibitif.
+
+
+\section{Décentraliser}
+
+Enfin, j'aimerais clore ce chapitre sur la distribution de contenu en évoquant brièvement le problème de la vidéo-à-la-demande décentralisée, que j'ai eu l'occasion d'aborder sous l'impulsion de Laurent Viennot~\cite{boufkhad08achievable,boufkhad09upload}. Ce problème, originalement proposé par Suh \emph{et al.}~\cite{diot07push}, utilise le fait que de plus en plus de foyers sont équipés d'adjoints de poste de télévision (\emph{set-top-boxes}), qui ont entre autres caractéristiques un disque dur et un accès Internet. D'où cette idée très simple : puisqu'un service de vidéo-à-la-demande nécessite essentiellement pour fonctionner de la capacité de stockage et de la bande passante, pourquoi ne pas construire un service qui repose sur les ressources des \emph{set-top-boxes} ?
+
+L'intérêt de ce sujet est qu'au-delà des problèmes classiques que l'on rencontre en distribution (bande passante et délai d'initialisation par exemple), on voit apparaître l'existence d'un compromis entre bande passante, capacité de stockage et taux d'échec. Ainsi, si l'on stocke les fichiers vidéos avec une redondance faible, plus la bande passante disponible est proche de la limite nécessaire au bon fonctionnement du service (loi de conservation), plus le risque est grand qu'en pratique, au moment où il faut distribuer une vidéo, les set-top-boxes possédant cette vidéo aient déjà épuisé les ressources réseau nécessaires, entraînant l'échec de la distribution. Pour diminuer le risque d'échec, il faut soit augmenter les capacités réseau, soit augmenter la redondance, et donc mécaniquement diminuer la capacité de stockage disponible\footnote{La manière dont les vidéos sont découpées intervient aussi~\cite{boufkhad08achievable,boufkhad09upload}.}.
+
+Une autre spécificité de ce problème est que bien que des solutions pratiques très simples, à base de choix aléatoires, puissent être mise en \oe uvre pour le résoudre de manière presque optimale, la théorie d'allocation sous-jacente est très subtile et assurément non-triviale.
+
+%\section{Synthèse et perspectives}
+
+
+
+\chapter{Réseaux à préférences acycliques}
+\label{sec:pbs}
+
+%\begin{svgraybox}
+
+L'objectif de ce chapitre est de présenter une contribution à laquelle je tiens tout particulièrement, à savoir le modèle des \emph{réseaux à préférences}. J'ai proposé ce modèle afin de mieux comprendre la dynamique des collaborations entre des pairs qui agissent indépendamment selon leurs propres préférences.
+
+
+%j'ai introduit il y a maintenant un peu plus de trois ans les réseaux à préférences dans la communauté \emph{graphes et réseaux}, et j'ai contribué -- aussi bien seul qu'en collaboration -- au modèle actuel qui, à défaut d'être complet (puisse-t-il ne jamais l'être), forme un ensemble cohérent. Ce mémoire est donc pour moi l'occasion de présenter <<~mon bébé~>> en langue française ;
+
+
+Ce chapitre est structuré en quatre partie : je propose tout d'abord de faire donner un bref aperçu de la théorie des mariages stables, d'où est tirée le modèle des réseaux à préférences. J'introduit ensuite les grandes bases : le formalisme employé, le grand théorème des préférences acycliques, qui est au centre de la théorie, et enfin une zoologie de ces fameuses préférences acycliques. La troisième partie est ensuite consacré à une étude fine des propriétés d'auto-stabilisation révélées par le grand théorème, tandis que la dernière partie est consacrée aux méthodes permettant de décrire la configuration stable d'un réseau à préférences acycliques.
+
+%The aim of this chapter is to present and give insight into one of the models for self-structured systems: \emph{preference-based systems} (p.b.s.). P.b.s. have been introduced to model the dynamics of collaborations between peers acting independently according to some personal preferences.
+%\end{svgraybox}
+
+\section{Origine}
+
+L'origine des réseaux à préférences est la théorie des \emph{mariages stables} proposée par Gale et Shapley. La plus ludique version de ce problème apparaît dès l'article original de $1962$~\cite{gale62college} : il s'agit de marier des hommes et des femmes en faisant en sorte d'éviter tout risque d'adultère. Formellement, une instance du problème des mariages stables est constituée de deux ensembles $H$ et $F$ (les hommes et les femmes), chacun classant strictement un sous-ensemble des membres du sexe opposé. Une configuration de cette instance est tout simplement un couplage entre $H$ et $F$. Elle est instable s'il existe un couple $(h,f)$ n'appartenant pas à la configuration, tel que $h$ préfère $f$ à sa partenaire dans la configuration (ou si $h$ est célibataire, que $h$ accepte d'être avec $f$), et réciproquement. Si cela se produit, l'adultère n'est pas loin, car $h$ et $f$ ont tout deux intérêt à se mettre ensemble, même si cela signifie la fin de leur couple actuel. À partir de cette définition, l'objectif de la théorie est d'identifier les configurations stables d'une instance donnée. Il a été prouvé dès $1962$ que si les préférences sont strictes (pas d'hésitations dans les classements), il existe toujours une configuration stable, que l'on peut facilement obtenir par l'\emph{algorithme du bal}~\cite{gale62college}.
+
+Une première extension du problème est celui du \emph{recrutement des Maîtres de Conférences} (\emph{college admission} ou \emph{hospitals/residents} en anglais~\cite{roth84evolution,irving00hospitals}). Dans cette variante, les membres de l'un des ensembles peuvent choisir plusieurs représentants de l'ensemble opposé. Par exemple, une université peut ouvrir plusieurs postes de Maître de Conférence chaque année, mais un futur maître de conférence n'ira qu'à une seule université. Comme pour le problème du mariage stable, il est toujours possible d'obtenir une configuration stable, et certains algorithmes proposés par Gale et Shapley sont toujours en vigueur dans nombre de processus de recrutement.
+
+Mais pour le P2P, l'extension intéressante est celle où il n'y a qu'une seule catégorie de participants. Cette variante unisexe est connue sous le nom du problème des \emph{camarades de chambre} (roommates) dans le cas du couplage simple, et $b$-couplage ($b$-matching) dans le cas général, $b$ étant la notation standard pour le vecteur décrivant les quotas du multi-couplage~\cite{fleiner03stable,irving87efficient,irving02stable}. Le mariage unisexe trouve des applications dans de nombreux domaines, l'une des variantes les plus actives étant les échanges de donneurs de rein (pairwise kidneys exchange program)~\cite{roth05pairwise,grey}. La principale difficulté par rapport aux mariages sexués est qu'il n'est plus possible de garantir l'existence d'une configuration stable, ce qui peut s'avérer problématique, en particulier quand il s'agit de dons d'organe.
+
+\subsection*{Réinventer la roue ?}
+
+Intuitivement, l'intérêt des théories de mariage pour le P2P est assez évident : si l'on a un ensemble de pairs, chacun possédant une liste de voisins avec lesquels il est susceptible d'interagir, la théorie devrait pouvoir nous éclairer sur ce qui se passe en supposant que chaque pair agit en fonction de son propre intérêt (i.e. de ses propres préférences).
+
+%The interest in the matching theories for P2P systems is rather intuitive: given a set of peers, each one having a list of neighbors for potential connections, the theory can give some insight into these connections under a scheme where each peer tries to maximize its own benefits.
+
+Comme les théories des mariages existent depuis près de $50$ ans, on pourrait penser qu'il suffit de prendre la littérature existante pour avoir l'outil idéal de modélisation P2P. En pratique, les choses ne sont pas aussi simples : les théories des mariages offrent effectivement un bagage théorique extrêmement puissant, mais les spécificités liées au P2P nécessitent de voir le problème sous un nouvel angle, celui des réseaux à préférences, qui sont l'objet de ce chapitre.
+
+%As the stable marriage theory and its $b$-matching variant have been widely studied for almost fifty years, one could think modeling P2P with it should be straightforward. In practice, it offers a steady theoretical background, but P2P networks have specificities that force a new perspective on the problem. Thus the need of introducing preference-based systems.
+
+Plus précisément, les principaux changements apportés par les réseaux à préférences sont les suivants :
+\begin{itemize}
+	\item les préférences des problèmes classiques de $b$-couplage sont souvent arbitraires, alors qu'en P2P, la plupart des préférences sont dérivées à partir de mesures objectives ;
+	\item l'existence de configurations stables et les moyens de les obtenir sont une composante essentielle des problèmes de $b$-couplage ; à l'inverse, la plupart des préférences P2P bénéficient d'un puissant théorème d'existence/unicité/convergence qui rend ces questions hors de propos ;
+	\item les questions de dynamique et de performance des configurations sont un aspect fondamental pour le P2P, et doivent donc être mises en avant.
+\end{itemize}
+
+
+%The details of differences between standard $b$-matching and preference-based systems are the following:
+%\begin{itemize}
+%	\item most of the time, preferences in $b$-matching studies are supposed to be arbitrary. On the other hand, P2P preferences are mostly built based on objective values.
+%	\item $b$-matching mainly cares about the existence of stable configurations, and how to compute them. Most P2P preferences fall under a powerful existence/uniqueness/self-stabilization theorem which makes such questions irrelevant.
+%	\item dynamics and performance of configurations are fundamental for P2P, while not extensively studied in $b$-matching research.
+%\end{itemize}
+
+
+\section{Les bases}
+
+L'objet de cette section est de présenter le domaine des réseaux à préférences, dans ses grandes lignes, damé et balisé après trois années de tâtonnements : les notations et définitions, telles qu'elles se sont stabilisées au fil du temps (\S~\ref{subsec:notation}) ; le grand théorème des préférences acycliques, qui malgré sa simplicité est la colonne vertébrale du modèle (\S~\ref{subsec:main_therorem}) ; et enfin, la zoologie des préférences acycliques, qui permet de voir comment relier le modèle à des situations réelles (\S~\ref{subsec:classes}). 
+
+%This section sets the main framework: notation and definition are presented in \S~\ref{subsec:notation}; the main theorem for acyclic preferences is then stated in \S~\ref{subsec:main_therorem}, and lastly \S~\ref{subsec:classes} gives a description of the set of acyclic preferences.
+
+
+\subsection{Notations et définitions}
+\label{subsec:notation}
+
+Comme indiqué dans l'introduction, les réseaux à préférences sont issus de la théorie des $b$-couplages~\cite{fleiner05generalization,diamantoudi04random}, et les notations s'en ressentent, même si un sous-vocabulaire spécifique a été introduit au fil des travaux~\cite{lebedev07using,DBLP:conf/icdcs/GaiMMR07,DBLP:conf/europar/GaiLMMRV07,DBLP:conf/sss/Mathieu07,mathieu08self}. En ce qui concerne la version française en particulier, le vocabulaire souvent imagé doit beaucoup à l'article de vulgarisation \emph{Mariages Stables} de Dominique Dumont~\cite{dumont99mariages}.
+
+%We present here the standard notation used for handling preference-based systems~\cite{lebedev07using,gai07acyclic,gai07stratification,DBLP:conf/sss/Mathieu07,mathieu08self}. A large part of it is based from the literature on $b$-matching~\cite{fleiner05generalization,diamantoudi04random}.
+
+
+%An instance of the problem is composed of a set of peers, with an acceptance graph (models the overlay graph and/or the knowledge), preferences and quotas. A configuration is a valid set of effective collaborations. The dynamic is modeled by the initiative process (peers try to improve their collaborations in a selfish, decentralized, manner).
+
+Ainsi, une instance de réseau à préférences est constituée d'un ensemble de pairs, d'un graphe d'acceptabilité, de préférences et de quotas. Une configuration est un ensemble d'interactions, dont la dynamique est décrite par des initiatives de pairs.
+
+
+\subsubsection{Réseau à préférences}
+\label{subsubsec:pbs_def}
+
+Le réseau à préférences lui-même est donc constitué d'un ensemble $P$ de $n$ pairs (ou n\oe uds) et d'un graphe $G=(P,E)$. Les préférences sont indiquées par une matrice de valeurs $m$ et les quotas par un vecteur $b$.
+
+%Un réseau à préférences est constitué d'un A preference-based system consists of a set $P$ of $n$ peers (or nodes), whose possible interactions are described by an acceptance graph $G$, a mark matrix $m$ and a quota vector $b$.
+
+Le graphe d'acceptabilité $G=(P,E)$ est un graphe non-orienté et non réflexif. Il décrit les compatibilités : deux pairs $i$ et $j$ peuvent interagir si, et seulement si, (ssi) $\{i,j\}\in E$. On dit alors que $i$ est \emph{acceptable} pour $j$, et réciproquement. Par exemple, $G$ peut représenter la connaissance des autres pairs (il est rare qu'un pair connaisse tous les autres pairs d'un réseau, sa vision est généralement limitée à un certain nombre de \emph{voisins}), ou encore l'existence d'un intérêt commun (la recherche d'un même fichier, l'appartenance à un même groupe, \ldots), ou tout simplement une structure \emph{overlay} imposée. Le graphe $G$ peut a priori être quelconque, cependant nous userons souvent dans ce chapitre des graphes Erdös-Rényi $\mG(n,p)$, où chaque arête existe avec probabilité $p$ indépendamment des autres (le degré moyen est ainsi $d=p(n-1)$). Ce choix est justifié par les facilités qu'offrent les graphes $\mG(n,p)$ quant à l'analyse théorique des propriétés des réseaux à préférences.
+
+%The acceptance graph $G=(V,E)$ is an undirected graph. It describes compatibilities: a peer $i$ and a peer $j$ are capable of collaborating (we say that $i$ is acceptable for $j$, and vice versa) if, and only if (iff) $\{i,j\}\in E$. For instance, the acceptance graph can represent the peers' knowledge of other peers, the existence of common interests between peers, or a pre-existing overlay graph. Although some of the results we provide are true for any kind of acceptance graph, we main consider Erdös-Rényi graphs $\mG(n,p)$ in this chapter (each possible edge exists with probability $p$ independently of the others; hence the expected degree is $d=p(n-1)$). The advantage of using $\mG(n,p)$ graphs is that theoretical analysis is easier to make.
+
+La matrice de valeurs $m$ indique l'intérêt que les pairs ont les uns envers les autres. Elle détermine ainsi les préférences. Pour toute paire acceptable de pairs $\{i,j\}\in E$, $m(i,j)$ est la valeur que $i$ donne à $j$. Sauf indication contraire, on considère que les basses valeurs sont préférées\footnote{Ce choix est purement conventionnel et n'affecte aucunement les résultats présentés ici. Il est naturel lorsque l'on considère des latences ou des distances. Dans le cas de valeurs comme la bande passante, ou plus généralement dans le cas de capacités, cela serait plutôt l'inverse.}. Ainsi, $m(i,j)<m(i,k)$ signifie que $i$ préfère $j$ à $k$. Une hypothèse que l'on fait tout au long de ce chapitre est qu'il n'y a jamais d'égalité, c'est-à-dire que pour chaque ligne de $m$, les valeurs acceptables sont deux à deux distinctes\footnote{Les cas d'égalités dans les préférences sont une source de problèmes que je ne tiens pas à évoquer dans ce chapitre \cite{irving00hospitals,irving02stable,iwama99stable,manlove02hard,manlove02structure,ronn86complexity}. On supposera donc qu'une égalité peut toujours être brisée, par exemple en attribuant à chaque pair un identifiant unique afin de départager toute ambiguïté.}.
+ La matrice $m$ peut posséder certaines propriétés particulières qui seront décrites au \S~\ref{subsec:classes}. Je précise également que s'il est toujours possible, et pratique, de supposer l'existence d'une matrice de valeurs $m$, cela n'est pas indispensable d'un point de vue théorique, car seuls les ordres (les préférences) induits par $m$ importent~\cite{DBLP:conf/europar/GaiLMMRV07,DBLP:conf/wine/AbrahamLMO07}. Il n'est pas nécessaire que les pairs connaissent $m$. Dans le pire des cas, il est même possible qu'un pair ne connaisse pas les valeurs de sa propre ligne. Cependant, afin de garder un sens au concept de matrice de valeurs, on suppose qu'il est toujours possible pour un pair de comparer les valeurs de deux voisins en les contactant, par exemple au cours d'une \emph{initiative} (voir plus loin).
+
+%The mark matrix $m$ defines how peers value each other. It is used for determining the preferences. For $\{i,j\}\in E$, $m(i,j)$ denotes the mark of $j$ for $i$. If $m(i,j)<m(i,k)$, then we say that $i$ prefers $j$ to $k$. We assume that there is no preference tie, i.e. that all marks within a row are distinct\footnote{Ties in the preferences raise many issues (\cite{irving00hospitals,irving02stable,iwama99stable,manlove02hard,manlove02structure,ronn86complexity}) that will not be discussed in this chapter. Note that ties can be easily avoided if we assume that the peers possess distinct ids that are used to break any tie that may happen.
+%}. The sign of the inequality is arbitrary, and has no impact on the results we give. By default, we assume lower marks are preferred (which is suitable for distance or latency marks), but for marks like bandwidths, it may be the opposite. The matrix $m$ can have various shapes (cf \S~\ref{subsec:classes}), which affect the resulting preferences. Note that a peer is not necessarily aware of the mark matrix values, even the values of its corresponding row in the matrix. However, we assume that a peer can always find out the value of a given neighbor by contacting it.
+
+Enfin, le vecteur des quotas, $b$, limite le nombre de collaborations : un pair $i$ ne peut collaborer avec plus de $b(i)$ voisins simultanément. On peut bien sûr toujours supposer que $b(i)$ n'est pas plus grand que le degré de $i$ dans $G$. Tout comme $G$ est souvent supposé Erdös-Rényi, $b$ est généralement supposé constant lorsque l'on veut analyser un réseau, même si toute distribution est autorisée a priori.
+
+%Lastly, the quota vector $b$ limits the collaborations: a peer $i$ cannot have more than $b(i)$ simultaneous collaborations. Without loss of generality, one can assume that $b(i)$ is not greater than the degree of $i$ in the acceptance graph. For convenience, we often assume that $b$ is a constant in this chapter, although the model allows any kind of integer distribution.
+
+\subsubsection{Configurations}
+\label{subsec:definit}
+
+%The state of collaborations in a preference-based system is called a configuration. Formally, a configuration $C$ is a subset of $E$. The neighbors $C(i)$ of $i$ in $C$ are called \emph{mates} of $i$. If $c(i)$ denotes the number of mates for peer $i$, the existence of quotas implies $c(i)\leq b(i)$ for all $i\in P$. If $c(i)<b(i)$, we say that $i$ is \emph{under-mated}.
+
+La configuration d'un système décrit l'état des collaborations. Formellement, une configuration $C$ est un sous-ensemble de $E$. Les voisins $C(i)$ de $i$ dans $C$ sont les \emph{partenaires} actuels de $i$. Si $c(i)$ désigne le nombre de partenaires de $i$ dans $C$, les quotas impliquent $c(i)\leqslant b(i)$. Si $c(i)<b(i)$, on dit que $i$ est \emph{sous-couplé}.
+
+Une configuration peut évoluer par la résolution d'arêtes \emph{adultères} (le terme est un hommage à la théorie originale des mariages). Une arête acceptable $e$ est adultère pour une configuration $C$ si elle n'appartient pas à $C$ et si chaque pair de l'arête a intérêt à établir la collaboration $e$, même si cela implique d'abandonner une collaboration de $C$ pour satisfaire les quotas. Formellement, une arête $e=\{i,j\}\in E\setminus C$ est adultère ssi :
+\begin{itemize}
+	\item $c(i)<b(i)$ ($i$ est sous-couplé), ou bien $\exists k \in C(i),m(i,j)<m(i,k)$ ($i$ préfère $j$ à l'un de ses partenaires);
+	\item $c(j)<b(j)$ ou bien $\exists k \in C(j),m(j,i)<m(j,k)$ (condition symétrique).
+\end{itemize}
+
+
+%The evolution of a configuration comes from the resolution of \emph{blocking edges}. A blocking edge is an edge $e$ between two neighbors that are not matched together ($e\in E\setminus C$), such that both could gain by collaborating (even if it means dropping an existing collaboration). Blocking edges are the equivalent of possible adulteries in the original marriage theory. Formally, an edge $e=\{i,j\}\in E$ is blocking iff:
+%\begin{itemize}
+%	\item $c(i)<b(i)$ ($i$ is under-mated), or $\exists k \in C(i),m(i,j)<m(i,k)$ ($i$ prefers $j$ to one of its mate);
+%	\item $c(j)<b(j)$ or $\exists k \in C(j),m(j,i)<m(j,k)$ (symmetrical to the previous condition).
+%\end{itemize}
+
+Un pair qui est adjacent à au moins une arête adultère est \emph{éligible} (il est susceptible de modifier la configuration). Une configuration qui ne possède pas d'arête adultère (ou de manière équivalente pas de pair éligible) est \emph{stable}.
+
+%A peer that belongs to at least one blocking edge is \emph{eligible}. A configuration with no blocking edge (or equivalently no eligible peer) is \emph{stable}.
+
+\subsubsection{Initiatives}
+
+Les arêtes adultères sont à la base de la dynamique des configurations. Plus précisément, l'évolution vient toujours d'un pair éligible qui essaie de résoudre une arête adultère à laquelle il appartient. Ce processus, supposé atomique, est appelé \emph{initiative}. Une initiative est \emph{active} si elle se traduit par la résolution d'une arête adultère.
+
+%In a preference-based system, the resolution of blocking edges is local: peers independently try to find and resolve a blocking edge they belong to. This scheme is called \emph{initiative}, and we assume that it is atomic. Initiatives are the elementary steps of the system evolution. An initiative is \emph{active} if it succeeds in resolving a blocking edge.
+
+Formellement, l'initiative est une <<~fonction~>> de sélection (qui peut dépendre du temps, de l'état du système, être aléatoire, \ldots) qui associe à chaque pair $i$ de $V$ un voisin à <<~essayer~>>, ou plus formellement une arête de $E\setminus C$ incidente à $i$. Si par défaut, l'ensemble de ces arêtes peuvent être considérées par cette fonction de sélection, dans le cas où les pairs ont la connaissance des arêtes adultères auxquelles ils appartiennent, il est possible de restreindre la sélection à ces seules arêtes.
+
+Des exemples d'initiatives sont la sélection \emph{meilleur partenaire} (parmi les arêtes adultères), \emph{décrémentale} (choix en \emph{round-robin} parmi la liste des voisins), ou simplement aléatoire.
+Remarquons que les différents types de sélection nécessitent, de manière implicite, plus ou moins de connaissances : ainsi, \emph{meilleur partenaire} et \emph{décrémentale} nécessitent d'être capable de trier ses voisins (et même de repérer les arêtes adultères pour la première), alors qu'une sélection purement \emph{aléatoire} nécessite juste d'être capable d'évaluer un voisin à la volée.
+Enfin, il est toujours possible d'hybrider plusieurs sélections afin d'obtenir une sélection plus performante. Un exemple de sélection \emph{hybride} sera décrit au \S~\ref{subsec:self_expected} (d'après~\cite{mathieu08self}).
+
+
+%An initiative scheme is formally described as a (possibly random or time varying) selection function from $V$ to $V$ that gives for any peer $i$ a neighbor to try. The selection can be restricted to blocking neighbors if the peer knows the blocking edges it belongs to. Otherwise the choice is made among all neighbors non adjacent to $i$ in $C$. Typical initiative schemes are best mate (best neighbor selection), decremental (round-robin-like selection), or plain random. Both best mate and decremental initiatives require a complete knowledge of the neighbors' ranking, whereas random initiative only requires to evaluate a peer's value on the fly. Note, that hybrid initiative schemes can be designed in order to increase the performance of a preference-based system (cf~\cite{mathieu08self}, or \S~\ref{subsec:self_expected}).
+
+Partant d'une configuration initiale donnée, l'évolution d'un système est donc décrite par la suite des initiatives réalisées par les pairs. Une suite classique est la suite \emph{Round-Robin}, adaptée pour modéliser un comportement mono-périodique des pairs, ou la suite \emph{uniformément aléatoire}, utilisée pour modéliser un processus Poissonnien homogène (chaque pair suit un processus de Poisson i.i.d.). Enfin, il y a les suites \emph{adversariales}, qui essaient de se comporter de la <<~pire~>> façon possible.
+
+%Starting from an initial configuration, the sequence of initiatives performed by peers during time will entirely define the system evolution. Standard sequences are for instance round-robin, which models a peer mono-periodic activity (each peer performs a periodic initiative, the time period being the same), or uniformly random, which models an homogeneous Poisson activity (each peer follows a Poisson process, the intensity being the same). We can also consider adversarial sequences, which are built in order to exhibit worst cases. 
+
+Par commodité, le temps est directement mesuré à l'aune de la suite des initiatives (il n'est ainsi pas nécessaire d'introduire explicitement des processus temporels d'initiatives). Il est malgré tout possible de considérer plusieurs mesures suivant le contexte que l'on considère. Par exemple, si l'on se place dans le contexte de l'auto-stabilisation au sens de Dijkstra~\cite{dijkstra74self}, on comptera seulement les initiatives actives, et les suites seront découpées en \emph{rounds} (un round est une sous-suite telle que chaque pair éligible au début du round prend une initiative ou devient non-éligible au cours de ce round). Pour les simulations, je préfère définir l'unité de temps (u.t.) par $n$ initiatives (actives ou non). Ainsi, chaque initiative atomique prend $\frac{1}{n}$ u.t., et au bout de $t$ u.t., le nombre d'initiatives par pair est en moyenne de $t$. Lorsque la suite d'initiatives est round-robin, round et unité de temps peuvent être considérés comme synonymes, mais ce n'est pas vrai dans le cas général.
+
+
+
+%By convention, the time unit (t.u.) is the time needed to perform a sequence of $n$ initiatives (in other words, the time cost of each atomic initiative is $\frac{1}{n}$ t.u.). This is a convenient scaling, because $t$ t.u. means that there is an average of $t$ initiatives per peer.
+%
+%Another time measure for the initiative is the round. A round is a sub-sequence where each peer that was eligible at the beginning of the round either takes an initiative or ceases to be eligible during the round. For a round-robin sequence, a time unit is a round, but this is not true in the general case.
+
+\subsubsection{Stabilité locale}
+
+La notion d'initiative entraîne une définition alternative de la stabilité : une configuration $C$ est stable si la seule configuration atteignable par initiatives à partir de $C$ est $C$ elle-même. Il est facile de vérifier que pour des initiatives arbitraires, cette définition est équivalente à celle donnée en \S~\ref{subsec:definit} (pas d'arête adultère). L'intérêt d'une approche au sens des initiatives de la stabilité est qu'elle permet une définition locale : une arête $e$ d'une configuration $C$ est \emph{stable} ssi $e$ existe dans toutes les configurations atteignables à partir de $C$. \'Ecrit autrement, une arête stable est une collaboration que les initiatives ne peuvent rompre.
+
+%The initiative process gives a new definition of stability: a configuration $C$ is \emph{stable} if the only configuration reachable from $C$ using any sequence of any initiative scheme is $C$ itself. This definition is equivalent to the one given in \S~\ref{subsec:definit} (no blocking edge). The advantage of the initiative approach of stability is that it can be defined at a local level: an edge $e$ of a configuration $C$ is \emph{stable} iff $e$ exists in all reachable configurations. In other words, a stable edge is a collaboration that initiatives cannot break.
+
+Lorsqu'un pair est incident à une arête stable, son degré de liberté s'en trouve diminué. Le quota libre d'un pair $i$, noté $b'(i)$, est le quota $b(i)$ auquel l'on retranche le nombre d'arêtes stables incidentes à $i$. Les quotas libres forment un vecteur qui est fonction de la configuration et qui ne fait que décroître avec le temps. Il est ainsi possible d'étendre la définition de stabilité au niveau des pairs : un pair $i$ est \emph{stable} (ou \emph{inactivé}) si $b'(i)=0$ ou si $i$ partage une arête stable avec tous ses voisins non-stables.
+
+%Whenever a node is adjacent to a stable edge, its degree of mating freedom is lessened. The \emph{free quota} of a node $i$, denoted $b'(i)$, is the difference between $b(i)$ and the stable edges adjacent to $i$. Free quotas form a configuration-dependent vector that can only decrease with time. They allow to define stability for a node: a node $i$ is \emph{stable} (or inactive), if $b'(i)=0$ or if all the non-stable neighbors of $i$ share a stable edge with it.
+
+Enfin, une dernière notion fondamentale à propos de la stabilité est celle de \emph{chaleur}. Dans une configuration donnée $C$, une arête $e=\{i,j\}$ acceptable mais hors de $C$ ($e\in E\setminus C$) est chaude ssi :
+\begin{itemize}
+	\item $j$ appartient aux $b'(i)$ meilleurs voisins non-stables de $i$,
+	\item $i$ appartient aux $b'(j)$ meilleurs voisins non-stables de $j$.
+\end{itemize}
+Il existe de même une définition plus stricte de la chaleur :  une arête acceptable $e=\{i,j\}$ entre deux pairs non-stables qui ne collaborent pas est dite bouillante pour $C$ ssi $i$ est le meilleur voisin non-stable de $j$ et vice versa.
+
+Par extension, un pair sera dit chaud (resp. bouillant) s'il est adjacent à une arête chaude (resp. bouillante).
+
+%The last definitions which are useful for stability are warmness and hotness. For a given configuration $C$, an un-matched edge $e=\{i,j\}$ of the acceptance graph ($e\in E\setminus C$) is \emph{warm} iff:
+%\begin{itemize}
+%	\item $j$ belongs to the $b'(i)$ best non-stable neighbors of $i$,
+%	\item $i$ belongs to the $b'(j)$ best non-stable neighbors of $j$.
+%\end{itemize}
+%Hotness is a more restrictive condition: an un-matched edge $e=\{i,j\}$ between two non-stable neighbors is hot with respect to $C$ iff $i$ is the best non-stable neighbor of $j$ and vice versa.
+%
+%By extension, we call warm node (resp. hot node) a peer adjacent to a warm edge (resp. hot edge).
+
+Intuitivement, les arêtes chaudes, et plus encore bouillantes, sont des arêtes super-adultères, qui n'attendent qu'une initiative bien placée pour devenir des arêtes stables. Elles jouent un rôle central dans les réseaux à préférences acycliques, à cause du lemme~\ref{lemma:hot}, qui est utilisé dans beaucoup de démonstrations :
+\begin{lemma}[\cite{lebedev07using,DBLP:conf/europar/GaiLMMRV07}]
+\label{lemma:hot}
+Si $C$ est une configuration non-stable d'un réseau à préférences acycliques, alors il existe au moins une arête bouillante par rapport à $C$.
+\end{lemma}
+
+Bien évidemment, ce lemme n'a de sens qu'une fois définie la notion d'acyclicité. C'est d'ailleurs l'objet du reste de cette section sur les bases des réseaux à préférences.
+
+%Intuitively, warm and hot edges are \emph{ready-to-be-stabilized} edges. They are a central concept in acyclic preference-based systems, because of the following lemma~\ref{lemma:hot}, which is used to demonstrate many properties of the acyclic p.b.s.: 
+%\begin{lemma}[\cite{lebedev07using,DBLP:conf/europar/GaiLMMRV07}]
+%\label{lemma:hot}
+%If $C$ is a non-stable configuration of a given acyclic p.b.s., there is at least one hot edge with respect to $C$.
+%\end{lemma}
+
+\subsection{Grand théorème des préférences acycliques}
+\label{subsec:main_therorem}
+
+Un \emph{cycle de préférences}, ou \emph{cycle de Kieschnick}, est un cycle de $k\geqslant 3$ pairs $i_1, \ldots, i_k$ tel que chaque pair préfère son successeur à son prédécesseur : $i_1$ préfère $i_2$ à $i_k$, $i_2$ préfère $i_3$ à $i_1$, \ldots, $i_k$ préfère $i_1$ à $i_{k-1}$ (ou encore, exprimé en terme de valeurs, $m(i_1,i_2)<m(i_1,i_k)$, $m(i_2,i_3)<m(i_2,i_1)$, \ldots, $m(i_k,i_1)<m(i_k,i_{k-1})$).
+
+%A \emph{preference cycle} is a cycle of $k\geq 3$ peers $i_1,\ldots,i_k$, such that each one prefers its successor to its predecessor: $i_1$ prefers $i_2$ to $i_k$, $i_2$ prefers $i_3$ to $i_1$,\ldots,$i_k$ prefers $i_1$ to $i_{k-1}$ (or equivalently $m(i_1,i_2)<m(i_1,i_k)$,$m(i_2,i_3)<m(i_2,i_1)$,\ldots,$m(i_k,i_1)<m(i_k,i_{k-1})$).
+
+L'objet principal de ce chapitre est les réseaux à préférences acycliques, c'est-à-dire qui ne contiennent pas de cycle de Kieschnick. Remarquons que l'acyclicité est entièrement définie par $m$, et qu'elle ne dépend ni des quotas, ni des initiatives. De même, si $m$ produit des préférences acycliques pour une acceptabilité complète, alors le réseau sera acyclique pour tout graphe d'acceptabilité $G$. Par convention, une telle matrice de valeurs $m$ est également appelée acyclique. Une classification des matrices acycliques, et le lien avec les systèmes P2P, sont proposés en \S~\ref{subsec:classes}.
+
+
+%In this chapter, we are interested in acyclic preference-based systems, that is p.b.s. which contain no preference cycle. Note that the acyclicity property is entirely defined by the mark matrix, and is independent from quotas or initiatives. By convention, we call \emph{acyclic} a mark matrix that produces an acyclic p.b.s. The classification of the acyclic mark matrices, and their link with P2P systems will be deepened in \S~\ref{subsec:classes}.
+
+Les réseaux à préférences acycliques sont caractérisés par une propriété qui les rend uniques au sein des réseaux à préférences :
+
+%Acyclic p.b.s. are characterized by a property that makes them unique among other p.b.s.:
+
+\begin{theorem}[\cite{DBLP:conf/europar/GaiLMMRV07}]
+Un réseau à préférences acycliques admet une, et une seule, configuration stable. De plus, il est auto-stabilisant par initiatives.
+\label{thm:big_convergence_theorem}
+\end{theorem}
+
+
+%\begin{svgraybox}
+%\begin{theorem}[\cite{DBLP:conf/europar/GaiLMMRV07}]
+%An acyclic preference-based system always admits a unique stable configuration, which is self-stabilizing.
+%\label{thm:big_convergence_theorem}
+%\end{theorem}
+%\end{svgraybox}
+
+\begin{soproof}
+%The complete proof is available in~\cite{DBLP:conf/europar/GaiLMMRV07}. It is in two steps: first, showing the self-stabilization, which proves the existence of a stable configuration, then the uniqueness.
+La preuve complète est disponible dans~\cite{DBLP:conf/europar/GaiLMMRV07}, mais j'en donne ici l'idée, à cause de l'importance de ce théorème et du caractère typique des techniques employées. L'on va ici procéder en deux étapes : d'abord montrer l'auto-stabilisation (ce qui prouvera l'existence d'une configuration stable), puis l'unicité.
+
+L'auto-stabilisation vient de la propriété suivante : quelque soit la suite d'initiatives considérée et la configuration de départ, la suite des configurations correspondantes est irréversible. C'est-à-dire que si le système se trouvait dans une configuration $C_1$ dans le passé et se trouve dans une configuration $C_2\neq C_1$, alors $C_1$ n'est pas atteignable à partir de $C_2$. L'irréversibilité se démontre par l'absurde, en extrayant un cycle de Kieschnick à partir d'un cycle de configurations. Comme $n$ est supposé fini, le nombre de configurations possibles l'est également, ce qui veut dire que toute trajectoire de configurations débouche nécessairement sur une configuration qui n'évolue plus, i.e. une configuration stable.
+
+%The self-stabilization comes from the irreversibility of the configuration evolution: given any sequence of initiatives, the corresponding sequence of configuration is irreversible. In other words, if the configuration is $C_1$ at time $t_1$ and $C_2$ at time $t_2$, with $C_1\neq C_2$, a consequence of the acyclicity is that $C\neq C_1$ for all configurations $C$ after $t_2$. Because the number of possible configurations is finite, any p.b.s. eventually reaches a configuration from which it cannot evolve, i.e. a stable configuration.
+
+L'unicité se prouve également par contradiction : si l'on considère deux configurations stables distinctes $A$ et $B$ d'un même système, et un pair $i$ dont les collaborations diffèrent de $A$ à $B$, alors on peut construire un cycle de Kieschnick en partant de $i$ (même si $i$ n'appartient pas nécessairement au cycle que l'on obtient au final).
+
+%The uniqueness is proved by contradiction: If we consider two distinct stable configurations $A$ and $B$, and a peer $i$ with different mates in $A$ and $B$, we can construct a preference cycle starting from $i$.
+\end{soproof}
+
+%This powerful result tells that for a p.b.s. with fixed parameters (nodes, acceptance graph, preferences, quotas), starting from any initial configuration, the performance of the system is eventually entirely described by the stable configuration. 
+
+
+
+\begin{figure}[t]
+\subfloat[Cas statique]{\includegraphics[width=.33\textwidth]{no_churn}\label{fig:nochurn}}\hspace{-.3cm}
+\subfloat[Altération atomique]{\includegraphics[width=.33\textwidth]{healing}\label{fig:healing}}\hspace{-.3cm}
+\subfloat[Agitation continue]{\includegraphics[width=.33\textwidth]{churn}\label{fig:churn}}\vspace{-.3cm}
+\caption{L'auto-stabilisation en pratique (d'après~\cite{DBLP:conf/icdcs/GaiMMR07}).} \label{fig:healingchurn}
+\end{figure}
+
+%
+%Before pursuing further, let us illustrate the practical importance of Theorem~\ref{thm:big_convergence_theorem} with an example, taken from~\cite{DBLP:conf/icdcs/GaiMMR07}: in Figure~\ref{fig:healingchurn}, we can see the evolution of a p.b.s. configuration with time. In details, we observe the distance between the actual and stable configurations (for details on the parameters and distance used, see~\cite{DBLP:conf/icdcs/GaiMMR07}). Three distinct scenarios are considered:
+%\begin{description}
+%	\item[Static case (\ref{fig:nochurn})] In a first set of simulations, a p.b.s. is set starting from the empty configuration, $C_\emptyset$. We observe the convergence towards the stable configuration stated by Theorem~\ref{thm:big_convergence_theorem};
+%	\item[Atomic alteration (\ref{fig:healing})] In the second set of simulations, a p.b.s. is in its stable configuration, then a peer is removed from the system. This alteration changes the stable configuration. The system then converges towards its new stable configuration. We can see that the new stable configuration stays close to the old one, and that the system converges back quickly.
+%	\item[Continuous churn (\ref{fig:churn})] Finally, we consider continuous churn: peers are removed or introduced in the system  according to a \emph{churn} intensity. We observe that the system cannot cope with the evolving stable configuration, especially for high churn intensity. However, the self-stabilization manages to keep the system close to the stable configuration (the distance is roughly proportional to churn intensity).
+%\end{description}
+
+J'insiste encore une fois sur le caractère fondamental de ce théorème d'existence/unicité/auto-stabilisation, car il permet de s'affranchir de l'étude de stabilité faite pour les autres types de préférences, et de se concentrer plus finement sur les configurations proprement dites.
+
+La première application de ce théorème est apparue dans l'article \emph{Stratification\footnote{Beaucoup de personnes me demandent pourquoi \emph{stratification}, au lieu de \emph{clusterisation} par exemple. Et bien tout d'abord, parce que \emph{clusterisation} est déjà sémantiquement surchargé en informatique ; ensuite parce que l'image des strates est au moins aussi parlante ; enfin parce que le mot est joli.} in P2P Networks: Application to BitTorrent}~\cite{DBLP:conf/icdcs/GaiMMR07}. Dans cet article, qui cherchait à modéliser un réseau BitTorrent comme un réseau à préférences acycliques (j'en parlerai plus en détail dans la suite du chapitre), nous avons mesuré la convergence effective entre configuration réelle et stable. Afin d'estimer l'importance pratique de l'auto-stabilisation, nous avions considéré trois types de scénarios (cf Figure~\ref{fig:healingchurn}) :
+\begin{description}
+	\item[Statique (\ref{fig:nochurn})] Partant de la configuration vide (souvent notée $C_\emptyset$), nous avons observé la convergence vers la configuration stable. Nous avons pu observer une bonne convergence dans tous les cas, tout en remarquant que les paramètres du système, et le degré moyen du graphe d'acceptabilité en particulier, jouaient un rôle majeur ;
+	\item[Altération atomique (\ref{fig:healing})] Un deuxième scénario élémentaire consiste à enlever un pair à partir d'une configuration stable (ce qui modifie la configuration stable), et refaire converger le système. On observe que la configuration réelle ne s'éloigne guère de la configuration stable, et finit par re-converger, même si à cause d'un éventuel effet domino, il se peut que le temps de convergence soit comparable au cas statique.
+	\item[Agitation continue (\emph{Continuous churn}) (\ref{fig:churn})] 
+Enfin, un troisième scénario consiste à faire partir et arriver des pairs dans le système selon une certaine intensité. Ce scénario permet de constater que la configuration réelle n'arrive pas toujours à rattraper l'évolution de la configuration stable, surtout quand l'agitation est extrême. Cependant, l'auto-stabilisation fait en sorte que la configuration réelle reste malgré tout assez proche de la configuration stable, la \emph{distance} entre les deux étant grossièrement proportionnelle à l'agitation.
+\end{description}
+
+À la suite de cette étude, j'ai commencé à travailler en partant du principe qu'à la condition que la convergence du système soit suffisamment grande devant l'évolution de celui-ci, la configuration stable devait être une bonne approximation des configurations réelles. C'est l'image du \emph{ressort} (cf Figure~\ref{fig:spring}). Cette image nous suggère de décomposer l'étude des systèmes à préférences acycliques en deux problèmes distincts :
+
+%This simple example suggests that the configuration of a p.b.s. should be always \emph{close} to the stable configuration, because of the self-stabilization. This is the \emph{spring} effect (cf Figure~\ref{fig:spring}).
+
+\begin{figure}[t]
+\begin{center}
+% Use the relevant command for your figure-insertion program
+% to insert the figure file.
+% For example, with the graphicx style use
+\parbox{5cm}{\includegraphics[width=4cm]{spring}}\parbox{7cm}{\caption{L'image du ressort : l'auto-stabilisation peut être vu comme une attirance continue de la configuration actuelle vers la configuration stable, comme si un ressort reliait ces deux configurations. Ce principe vaut même si la configuration stable bouge dans le temps.}\label{fig:spring}}
+\end{center}
+%
+% If no graphics program available, insert a blank space i.e. use
+%\picplace{5cm}{2cm} % Give the correct figure height and width in cm
+%
+%\caption{The \emph{spring} metaphor: because of the self-stabilizing property, the current configuration is continuously attracted to the stable configuration, as if there was a spring between them. This is true even if the stable configuration evolves during time.}
+       % Give a unique label
+\end{figure}
+
+
+%Thus the Theorem~\ref{thm:big_convergence_theorem} justifies a two-step approach for analyzing the performance of acyclic preference-based systems:
+%\begin{description}
+%	\item[How fast is the self-stabilizing process?] The proof of the theorem only gives the number of possible configurations as a bound, which is far too high to be of a practical use: this number, also known as the number of involutions of a set of size $n$, has a factorial-like asymptotic behavior~\cite{chowla50asymptotic}. Thus there is a need for tighter bounds in order to evaluate the \emph{force constant} of the \emph{spring}.
+%	\item[What are the properties of the stable configuration?] If the self-stabilization is fast enough compared to the characteristic time of the system and the possible churn intensity, then the stable configuration will give a good approximation of the effective configurations of the system. Therefore the generic properties of stable configurations can be used to estimate the performance of the system.
+%\end{description}
+
+\begin{description}
+	\item[Quelle est la vitesse de convergence ?] En effet, le théorème~\ref{thm:big_convergence_theorem} ne nous donne que le nombre de configurations possibles comme borne. Ce nombre croît de manière factorielle~\cite{chowla50asymptotic} et offre donc un intérêt pratique assez limité. Une première zone d'étude consiste donc à caractériser plus finement la \emph{raideur} effective du ressort.
+	\item[Quelles sont les propriétés des configurations stables ?] La question précédente doit permettre de déterminer dans quelle mesure une configuration stable est une bonne approximation d'une configuration réelle. Quand c'est le cas, les propriétés génériques des solutions stables peuvent permettre d'estimer les performances du système.
+\end{description}
+
+Ces deux questions vont faire l'objet des deux prochaines sections de ce chapitre. Mais avant d'y répondre, je propose de regarder d'un peu plus près ces préférences acycliques dont je n'ai jusqu'à présent donné qu'une définition sommaire et peu pratique.
+
+%These two questions will be addressed in the two next sections. But first let us take a closer look at the shape of the acyclic preferences.
+
+\subsection{Zoologie des préférences acycliques}
+\label{subsec:classes}
+
+Parmi toutes les matrices réelles possibles, peu sont acycliques. En fait, si l'on prend une matrice dont les coefficients sont choisis au hasard, il est très probable que les préférences qui en résultent contiennent au moins un cycle de longueur $3$\footnote{La probabilité que trois pairs mutuellement acceptables forment un cycle est de $\frac{1}{4}$, pour des valeurs aléatoires uniformes. La probabilité de ne pas avoir de tel cycle est donc au plus de $(\frac{3}{4})^{\lfloor \frac{n}{3}\rfloor}$ ($(\frac{3}{4})^{n\choose 3}$ si l'on néglige de possibles corrélations), ce qui ne vaut pas grand chose dès que $n$ est assez grand.}.
+%The set of the acyclic matrices is only a small subset of all possible mark matrices. In fact, if you pick up a mark matrix with random values, it is very likely that the corresponding preferences contain a cycle: if you consider any set of $3$ peers with random marks between them, the probability that they form a preference cycle is $\frac{1}{4}$; thus the probability of having no preference cycle of length $3$ is $(\frac{3}{4})^{n\choose 3}$, which is very low for $n$ large.
+D'un autre côté, beaucoup de propriétés matricielles sont synonymes d'acyclicité. Par exemple (\cite{DBLP:conf/europar/GaiLMMRV07}):
+\begin{description}
+	\item[Les matrices globales] Une matrice de valeurs $m$ est globale si toutes ses lignes sont identiques si l'on se restreint aux entrées acceptables. Intuitivement, c'est un cas particulier de matrice de rang $1$, et formellement, on a $m(i,k)=m(j,k)$ pour tout les $i,j$ qui acceptent $k$. Les préférences correspondantes, également appelées globales, reflètent un ordre total sur les pairs. On peut d'ailleurs remarquer qu'à cause de cet ordre total, on peut dire qu'à acceptabilité et permutation des pairs près, il n'y a qu'une seule préférence globale.
+	\item[Les matrices symétriques] Si $m$ est symétrique sur ses entrées acceptables ($m(i,j)=m(j,i)$ pour toute paire acceptable) $m$ est acyclique. Une propriété intéressante des matrices symétriques est qu'elles décrivent l'ensemble des préférences acycliques (cf \cite{DBLP:conf/europar/GaiLMMRV07,DBLP:conf/wine/AbrahamLMO07}). Le lien entre matrices acycliques, symétriques, globales, et les préférences correspondantes est illustré Figure~\ref{fig:classes}\footnote{La Figure~\ref{fig:classes} est bien sûr incomplète. Il manque par exemple les combinaisons linéaires en général, et les matrices complémentaires en particulier, ainsi que la génération de l'ensemble des préférences acycliques par des permutations des entrées d'une matrice symétrique à coefficients distincts. Mais la lisibilité graphique s'en trouverait affectée.}.
+	\item[Combinaison linéaire de matrices globales et symétriques] Les matrices obtenues sont acycliques tant qu'elles ne génèrent pas d'égalité (mais comme indiqué en \S~\ref{subsubsec:pbs_def}, il est toujours possible de s'affranchir des cas d'égalité). En revanche, une combinaison linéaire de matrices acycliques n'est pas forcément acyclique : si les matrices d'entrée ne sont pas déjà elles-mêmes combinaison linéaire de matrices symétriques et globales, il faut les symétriser, ce qui se fait assez facilement car la preuve de surjection des matrices symétriques dans les préférences acycliques est constructive (cf \cite{DBLP:conf/europar/GaiLMMRV07,DBLP:conf/wine/AbrahamLMO07}).
+	\end{description}
+
+
+
+%On the other hand, many matrices with specific properties are acylic. For instance (\cite{DBLP:conf/europar/GaiLMMRV07}):
+%\begin{description}
+%	\item[Global matrices] A mark matrix $m$ is global if all its rows are identical with respect to its acceptable entries (in other words, $m(i,k)=m(j,k)$ for all $i,j$ that accept $k$). The corresponding preferences follow a total order among the nodes, and are thus called node-based (or just global).
+%	\item[Symmetric matrices] A matrix $m$ that verifies $m(i,j)=m(j,i)$ for all acceptable pairs $\{i,j\}$ is acyclic. Note that the corresponding preferences, which are edge-based, form the whole set of the acyclic preferences (i.e. any acyclic preference can be described by a symmetric mark matrix \cite{DBLP:conf/europar/GaiLMMRV07,DBLP:conf/wine/AbrahamLMO07}). The links between acyclic, global and symmetric matrices and the corresponding preferences are summarized by Figure~\ref{fig:classes}.
+%	\item[Linear combination of global and symmetric matrices] Such matrix are acyclic as long as the linear combination produces no ties (but as stated in \S~\ref{subsubsec:pbs_def}, ties are easy to remove). \end{description}
+
+%\begin{figure}[t]
+%% Use the relevant command for your figure-insertion program
+%% to insert the figure file.
+%% For example, with the graphicx style use
+%\includegraphics[width=5cm]{classes}
+%%
+%% If no graphics program available, insert a blank space i.e. use
+%%\picplace{5cm}{2cm} % Give the correct figure height and width in cm
+%%
+%\caption{Matrices and corresponding preferences: symmetric and global matrices form two distinct subsets of the acyclic matrices, but symmetric matrices can describe all acyclic preferences, including global preferences.}
+%\label{fig:classes}       % Give a unique label
+%\end{figure}
+
+\begin{figure}[t]
+\begin{center}
+% Use the relevant command for your figure-insertion program
+% to insert the figure file.
+% For example, with the graphicx style use
+\parbox{5cm}{\includegraphics[width=4cm]{classes}}\parbox{7cm}{\caption{Correspondances entre matrices et préférences : les matrices symétriques et globales forment deux sous-ensembles distincts de matrices acycliques, mais les matrices symétriques peuvent décrire l'ensemble des préférences acycliques (ce qui inclut les préférences globales).}
+\label{fig:classes}}
+\end{center}
+\end{figure}
+
+
+%Let us remark that it is always possible to merge acyclic preferences together, if we use a representation by symmetric matrices and a linear combination.
+
+\subsubsection{Préférences adaptées au P2P}
+
+Après avoir esquissé ce qui fait que des préférences sont acycliques, je propose maintenant de nous recentrer dans le contexte du pair-à-pair, et de considérer les préférences pair-à-pair acycliques.
+\begin{description}
+	\item[Capacités] Un pair dans un réseau P2P possède de nombreuses caractéristiques scalaires intrinsèques qui peuvent créer des préférences : bande passante d'accès, capacité de stockage ou de calcul, \emph{uptime} moyen,\ldots Si l'on prend l'exemple du protocole de partage de fichiers BitTorrent~\cite{cohen03incentives}, un algorithme \emph{donnant-donnant} fait qu'un pair tend à collaborer de préférence avec ses voisins qui lui fournissent la plus grande vitesse de téléchargement. Cela peut être vu en première approximation comme un réseau à préférences où la valeur est la bande passante d'émission divisée par le quota (le nombre d'émissions simultanées).
+	\item[Proximités] Toutes les valeurs qui peuvent être assimilées à une sorte de distance (physique ou virtuelle) ou de similarité sont symétriques par nature. Ainsi, beaucoup de systèmes P2P essaient de minimiser les latences\footnote{Se pose bien sûr la question de savoir si les latences sont des distances, ou même symétriques. Quoiqu'il en soit, empiriquement, elles ne produisent pas de cycle de Kieschnick.}, comme par exemple la DHT Pastry~\cite{pastry} ou les applications de jeu en ligne en temps réel~\cite{syncms}. De même, les jeux massivement multi-joueurs en ligne (MMOG) doivent connecter ensemble les joueurs proches dans un certain espace virtuel~\cite{keller03simon,mmog,solipsis}. Certains auteurs proposent également de connecter les participants d'un système de partage de fichiers en fonction de leurs intérêts communs~\cite{sripanidkulchai03efficient,fessant04clustering}, ce qui reste une mesure symétrique. Le \emph{co-uptime}, c'est-à-dire le temps (moyen) d'activité commune, est un dernier exemple de mesure symétrique ayant un intérêt pour des applications collaboratives.
+	\item[Complémentarités] La mesure des différences entre les ressources des participants peut également s'avérer intéressante. Par exemple, dans une application de stockage distribué de fichiers, il est utile de trouver des machines qui sont allumées quand ma propre machine est éteinte, afin de garder mes données disponibles à tout moment. La mesure correspondante est l'uptime complémentaire. De même, dans un système comme BitTorrent, tous les participants cherchent à avoir le même fichier, qui est divisé en blocs\footnote{Il paraît même que parfois, certains blocs pourraient être plus rares que d'autres \cite{mathieu06missing}.}. Trouver les voisins qui ont le plus de blocs que je n'ai pas encore obtenus a un intérêt. Toutes ces préférences dites complémentaires sont un cas particulier de combinaison linéaire d'une matrice globale et d'une matrice symétrique, et sont donc acycliques~\cite{DBLP:conf/europar/GaiLMMRV07}.
+\end{description}
+
+
+
+%Now that we have an idea of the possible acyclic p.b.s., let us see how standard P2P measurements fit into our framework.
+%\begin{description}
+%	\item[Capacity] A peer in a P2P network possesses many node-based values that are relevant for preferences: Access bandwidth, storage or CPU capacity, average uptime,\ldots For instance, the filesharing protocol BitTorrent~\cite{cohen03incentives} uses a Tit-for-Tat policy that makes a peer upload preferentially to the neighbors from whom it downloads the most. This can be seen as a preference system where the mark of a peer is its upload bandwidth (divided by its quota, i.e. its number of simultaneous upload connections).
+%	\item[Proximity] All values that correspond to a sort of distance (in the physical network or in a virtual space) or similarity measure are edge-based by nature. For instance, many P2P systems try to minimize the latencies, such as the DHT Pastry~\cite{pastry} or online real-time gaming applications~\cite{syncms}. Similarly, massively multiplayer online games (MMOG) require connecting together players with nearby coordinates in a virtual space~\cite{keller03simon,mmog,solipsis}. Some authors also propose to connect participants of a filesharing system according to their common interests~\cite{sripanidkulchai03efficient,fessant04clustering}, which is a symmetric measure. The co-uptime, which is the average shared uptime, can also be a relevant measure for all collaborative applications.
+%	\item[Complementarity] The measure of the difference between the resources of peers can also be valuable. For instance, a peer in a distributed storage application may want to find neighbors that are online when it is not, in order to keep its data available even when it is not connected. This is complementary uptime. Similarly, in a filesharing system like BitTorrent, where all participants want a same content which is divided into pieces, it may be convenient to collaborate with the peers possessing the most complementary set of file pieces. As a special case of a linear combination of a global and a symmetric value, complementary preferences are acyclic~\cite{DBLP:conf/europar/GaiLMMRV07}.
+%\end{description}
+
+\subsubsection{Classes de préférences étudiées}
+
+Comme nous venons de le voir, il existe de nombreuses préférences acycliques présentant un intérêt du point de vue du P2P. Au cours de mes travaux, je me suis concentré sur quatre classes de préférences acycliques, ce qui évite de se disperser dans un labyrinthe de cas particuliers tout en donnant une idée précise des liens entre préférences et propriétés des systèmes.
+\begin{description}
+	\item[Globales] Bien que représentant un sous-ensemble négligeable (en terme de cardinalité) des préférences acycliques, les préférences globales sont parmi les plus importantes des préférences acycliques (elles modélisent les capacités), et doivent recevoir une attention particulière. Comme il n'existe en fait qu'un unique système de préférences globales, induit par un ordre total sur les pairs, j'utiliserai cet ordre au lieu d'expliciter la matrice des valeurs $m$. Les pairs seront ainsi étiquetés de $1$ à $n$, $1$ étant le \emph{meilleur} (il est préféré par tous ses voisins acceptables), et ainsi de suite\ldots 
+	\item[Géométriques] Pour des préférences issues de distances, les propriétés des préférences dépendent grandement de la manière dont les points sont positionnés dans l'espace sous-jacent. On peut d'ailleurs facilement montrer que toutes les préférences acycliques peuvent être générées en plaçant les $n$ pairs aux sommets d'un simplexe et en le perturbant (en bougeant légèrement les sommets) de manière adéquate. Malgré tout, l'expérience semble montrer que certaines caractéristiques se retrouvent fréquemment. Pour se donner des préférences de proximité typiques et analysables, je propose de considérer les préférences obtenues en considérant les distances prises entre $n$ points au hasard sur un tore unitaire de dimension $t$ ($t\geqslant 1$).
+	\item[Latences réelles] Avoir des mesures réelles pour valider les résultats est bien évidemment nécessaire, même si l'analyse théorique devient alors difficile. Pour $n\leqslant 2500$, j'utilise, pour contrôler la validité de certains résultats géométriques, des sous-ensembles de taille $n$ extraits du jeu de données du projet Meridian~\cite{meridianproject}. Les valeurs sont les latences (symétriques) entre les n\oe uds sélectionnés.
+	\item[Acycliques aléatoires] Une dernière classe de préférences est obtenue en attribuant à chaque arête acceptable une valeur aléatoire uniforme comprise entre $0$ et $1$. J'appelle les préférences qui en résultent \emph{acycliques aléatoires} (ou simplement acycliques quand il n'y a pas d'ambiguïté), car on peut montrer que cette approche produit un échantillonnage uniforme sur l'ensemble des préférences acycliques possibles~\cite{DBLP:conf/europar/GaiLMMRV07,DBLP:conf/wine/AbrahamLMO07}.
+\end{description}
+
+
+%Because all acyclic preferences do not have the same self-stabilization and stable configuration, we focus here on four sort of acyclic preferences:
+%\begin{description}
+%	\item[Node-based] As we said before, a node-based matrix is equivalent to a total order among the nodes. Therefore we do not need to explicit the mark matrix $m$ for node-based preferences, and we can use an ordered node labeling instead. We arbitrary choose $1,\ldots,N$ as labels, $1$ been the best (if $1$ is ranked first for all nodes that accept $1$, and so on\ldots).
+%	\item[Geometric] the nodes are associated to $n$ points picked uniformly at random on a $t$-dimensional torus ($t\geq 1$). The (symmetric) marks are the distances between those points. These preferences allow a theoretical analysis of proximity-based performance.
+%	\item[Meridian latencies] we considered random subsets of $n$ nodes taken from the $2500$ nodes dataset of the Meridian Project~\cite{meridianproject}. The marks are the (symmetric) latencies between those nodes. We do not perform analysis for those marks, but use them in \S~\ref{subsec:diaclust} for validating the geometric approach.
+%	\item[Random acyclic preferences] Each edge receives a random uniformly distributed value. The name is justified because as stated before, all acyclic preferences can be described edge-based marks. Hence uniformly distributed (symmetric) random marks are a convenient way to perform a uniform sampling of the acyclic preferences~\cite{DBLP:conf/europar/GaiLMMRV07,DBLP:conf/wine/AbrahamLMO07}.
+%\end{description}
+
+
+\section{Caractérisation de l'auto-stabilisation}
+\label{sec:self}
+
+\emph{Quelle est la vitesse de convergence ?} Cette section va tenter de répondre à cette question, d'un point de vue théorique (\S~\ref{subsec:self_worst} et \S~\ref{subsec:self_expected}) et pratique. 
+
+
+
+%In this section, we want to respond to the question \emph{How fast is the self-stabilizing process?}. This question will be answered both theoretically and through simulations. While theoretical results can only be given for specific parameters (for instance, only \emph{best mate} initiatives are investigated, and most of the tight convergence bounds only concern the case $b=1$), simulations allow to investigate a broader set of situations.
+
+\subsection{Bornes supérieures}
+\label{subsec:self_worst}
+
+Je propose d'abord de donner des bornes supérieures, au sens de la théorie de l'auto-stabilisation. L'initiative considérée dans toute cette section est \emph{meilleur partenaire}. Pour $b=1$, les bornes sont exactes, linéaires en rounds, et quasi-exactes, exponentielles en initiatives. Je donne ensuite des bornes plus faibles pour $b>1$.
+
+%We first propose to give upper bounds for the convergence time with best mate initiative. For the case $b=1$, we show upper bounds, linear in rounds and exponential in number of initiatives. Both bounds are tight for some adversarial sequence. Then we propose a weaker round-bound for $b>1$.
+
+%We show that the worst-case convergence time is linear in a synchronous model, but exponential in an asynchronous model. The bounds are reached for peer-based preferences~\cite{DBLP:conf/sss/Mathieu07}.
+
+\input{upper_convergence/upper_convergence}
+
+\subsection{Temps moyens de convergence}
+\label{subsec:self_expected}
+
+Intéressons-nous maintenant à la convergence moyenne pour des suites round-robin et Poisson non adversariales. Les résultats présentés ici sont valables pour $b=1$, en initiative \emph{meilleur partenaire}. Il s'agit de bornes supérieures sur le temps moyen de convergence de certaines classes de systèmes à préférences, temps moyen mesuré en initiatives ($1\text{ u.t.}=n\text{ initiatives}$).
+
+%Now, we focus on the convergence expected in practice under realistic initiative behaviors, namely the poisson and round-robin sequences. The results presented here are for $b=1$ and best-mate initiative. We give upper bounds for the expected convergence time of p.b.s., measured in time units.
+
+% The main results are a linear convergence for peer-based preferences and a logarithmic convergence for other preferences~\cite{DBLP:conf/p2p/Mathieu07}.
+
+\input{expected_convergence/convergence}
+
+\section{Les configurations stables}
+\label{sec:stable}
+
+Avant de conclure ce chapitre sur les réseaux à préférences acycliques, je propose de répondre, au moins partiellement et pour les graphes d'acceptabilité Erdös-Rényi, à la deuxième question majeure des systèmes à préférences acycliques : \emph{quelles sont les propriétés de la configuration stable ?}
+
+%Now we want to answer the second question of interest for acyclic preference-based systems: assuming that the self-stabilization ensures that the configurations of a system are stable, or almost stable, \emph{what are the properties of the stable configuration?}
+
+Pour $b=1$, il est possible d'étudier la distribution des partenaires grâce à une approche (simplifiée) de type \emph{champ moyen}. Pour les préférences globales, on peut prouver l'existence d'une limite fluide avec solution explicite, qui montre en particulier que la distribution de la valeur du partenaire d'un pair est centrée autour de la valeur de ce pair, avec une décroissance exponentielle : c'est l'effet de \emph{stratification}~\cite{DBLP:conf/icdcs/GaiMMR07}. Pour des préférences acycliques aléatoires ou géométriques, la solution de la limite fluide décroît en loi de puissance. Bien que je ne sois pas en mesure de prouver l'approche \emph{champ moyen}, je propose de valider cette approche en la comparant avec la solution exacte (pour les préférences globales) ou à l'aide de simulations.
+
+
+%For $b=1$, we propose a generic mean-field approach. For node-based preferences, we show the existence of a fluid limit for which we give an explicit solution, which indicates that the stable mate of a peer follows an exponentially decreasing distribution centered around that peer: this is the \emph{stratification} effect~\cite{DBLP:conf/icdcs/GaiMMR07}.
+%For random acyclic and geometric preferences, the fluid limit indicates a power-law distribution. The validity of the fluid limit can be validated by comparing to an exact solution for node-based preferences, and by simulations otherwise.
+
+%\subsection{Multiple matching generalization}
+%\label{subsec:stable_multiple}
+
+Enfin, je propose d'étendre les résultats à $b\geqslant 1$. Les équations fluides ne semblent alors plus admettre de solution explicite, mais on observe le même comportement asymptotique que pour $b=1$ (exponentiel pour les préférences globales, en loi de puissance sinon). Une conséquence inattendue est que pour les préférences géométriques, la configuration stable est un petit-monde si les quotas sont suffisants.
+
+La plupart des résultats présentés ici sont rassemblés dans l'article \emph{The Stable Configuration in Acyclic Preference-Based Systems}~\cite{mathieu09stable}, dont une version étendue est disponible sous forme de rapport de recherche~\cite{mathieu08stable}.
+
+%Lastly, we extend the results to multiple matchings. Although the corresponding fluid limits have no explicit solution, the same asymptotical behavior than for $b=1$ is observed (exponential for peer-based preferences, power-law for other classes). As an interesting side-effect, the stable configuration for distance-based classes with enough quotas is a small world.
+
+\input{stable_configuration/node_stable}
+
+
+\subsection{Quelques applications}
+\label{sec:applications}
+
+Ayant mis beaucoup d'efforts dans la simple étude des distributions, je dois reconnaître n'avoir pas encore consacré énormément de temps aux propriétés évoluées des configurations stables, c'est-à-dire à celles susceptibles d'aider à comprendre les systèmes existants et à en développer de nouveaux. En voici néanmoins deux : la stratification des préférences globales et la <<~petit-mondisation~>> des préférences géométriques.
+
+\subsubsection{Stratification}
+\label{subsec:appli_bittorrent}
+
+%\paragraph{Stratification trade-off}
+Comme nous venons de le voir, en préférences globales, les partenaires stables d'un pair $i$ donné ont, en moyenne, le même rang que $i$. C'est la stratification, qui garantit une certaine équité dans la configuration stable~\cite{DBLP:conf/icdcs/GaiMMR07} : en terme de rang, ce que donne un pair devrait être à peu près égal à ce qu'il reçoit. Il faut aussi se rappeler que les $\mD_c(\alpha,.)$ ont une décroissance exponentielle avec déviation en $\frac{1}{d}$, $d$ étant le degré moyen du graphe d'acceptabilité. On s'aperçoit alors qu'il faut résoudre le compromis suivant : 
+\begin{itemize}
+	\item si $d$ est trop petit la déviation est élevée. En particulier, si les entrées de la matrice des valeurs (par exemple les bandes passantes d'un système à la \emph{BitTorrent}) suivent une distribution non-uniforme, il peut y avoir une très grande différence entre l'espérance du gain et ce que l'on donne. Ce problème a été mis en évidence dans~\cite{DBLP:conf/icdcs/GaiMMR07} pour expliquer des failles potentielles de la technique de Tit-for-Tat employée par BitTorrent ;
+	\item un grand $d$ permet à l'opposé de renforcer l'équité. Mais en pratique, augmenter la taille du graphe d'acceptabilité a un coût pour les pairs : temps de convergence, place mémoire, maintenance du graphe\ldots Un grand $d$ raccourcit aussi la déviation (jusqu'au Dirac dans la limite fluide), et donc augmente le diamètre de la configuration stable, ce qui peut être problématique si l'on veut propager de l'information à travers les arêtes stables.
+\end{itemize}
+Pour le quota $b$, qui représente le degré maximal dans la configuration stable, un compromis similaire existe : un grand $b$ peut améliorer l'équité et diminuer le diamètre, mais va être coûteux en ressources.
+
+Cela suggère que pour la plupart des systèmes à préférences globales (i.e. basés sur le partage de la bande passante, de la capacité de stockage ou de calcul, de l'uptime\ldots), il devrait exister un couple $(d,b)$ (ou plus généralement un couplage entre un graphe d'acceptabilité et un vecteur de quotas) optimal pour la configuration stable, dont la valeur exacte dépendrait de l'importance donnée à des paramètres comme le diamètre, l'équité, le temps de convergence ou le coût de maintenance.
+
+
+
+%As we have seen, for node-based preferences, the mates of a given peer $i$ have, in average, the same rank than $i$. This is the stratification effect (\cite{DBLP:conf/icdcs/GaiMMR07}), which guarantees some fairness in the stable configuration: the expected gain of a node tends to be the value offered by this node, measured in terms of ranking. However, we also observed that the exponential decreases of the $\mD_c(\alpha,.)$ functions provokes a standard deviation of the same order that $\frac{1}{d}$, where $d$ is the average degree in the acceptance graph. This gives the following stratification trade-off:
+%\begin{itemize}
+%	\item if $d$ is too small, the standard deviation is high. In particular, if the mark matrix is non uniformly distributed, there can be a big difference between the expected gain and gift, measured with the marks. This issue has been highlighted in~\cite{DBLP:conf/icdcs/GaiMMR07} for explaining a possible workaround of BitTorrent's Tit-for-Tat policy;
+%	\item on the other hand, a high $d$ will enforce the fairness. However, increasing the size of the acceptance graph degree has a cost for the nodes: convergence time, memory usage, overlay management,\ldots Also, the absence of long-range mates makes the diameter of the stable configuration high, which can be problematic if messages are to be spread using stable edges.
+%\end{itemize}
+%Note that there are similar trade-offs between cost and quality for $b$, which is the maximal degree in the stable configuration.
+%\begin{svgraybox}
+% This suggests that most node-based preference systems (this includes the systems based on the sharing of an access bandwidth, a storage or CPU capacity, an expected uptime,\ldots) should admit an optimal pair $(d,b)$ with respect to the stable collaborations properties, whose values depend on the weight put on performance measures like diameter, fairness homogeneity, convergence time or overhead cost.
+%\end{svgraybox}
+
+\subsubsection{Petit-mondisation}
+\label{subsec:diaclust}
+\label{subsec:appli_latency}
+
+Un petit monde est un graphe creux (degré moyen en $O(\log(n))$ voire en $O(1)$) avec un plus court chemin moyen (\emph{average shortest path length} ou ASPL) en $O(\log(n))$ et un coefficient de clustering élevé (il existe beaucoup plus de cycles courts que pour un graphe aléatoire de même taille).
+Par exemple, Kleinberg a montré il y a quelques années qu'une grille de dimension $n$ pouvait être transformée en petit-monde à condition d'ajouter des arêtes longues suivant une distribution en $\Omega(\frac{1}{x^n})$~\cite{kleinberg00small}.
+
+%A small world is a sparse graph with a low average shortest path length (ASPL) and a high clustering coefficient. In details:
+%\begin{itemize}
+%	\item \emph{sparse graph} means that the average degree is $O(\log(n))$ or even $O(1)$,
+%	\item \emph{low ASPL} means $O(\log(n))$,
+%	\item \emph{high clustering coefficient} means that two nodes sharing an edge are likely to have a common neighbor. The clustering coefficient is a probability, that must be compared to a reference value, for instance the clustering coefficient of a random graph with same number of nodes and edges.
+%\end{itemize}
+% In~\cite{kleinberg00small}, Kleinberg proved that a $n$-dimensional grid can be turned into a small world by adding long-range edges that follow a $\Omega(\frac{1}{x^n})$ distribution.
+
+Regardons maintenant ce qui se passe pour une configuration stable, avec un $b$ en $O(\log(n))$ pour que la configuration soit <<~creuse~>>. S'il s'agit de préférences globales, le clustering est bien là comme conséquence de la stratification, mais le diamètre a tendance à croître linéairement~\cite{DBLP:conf/europar/GaiLMMRV07}. De même, pour les préférences acycliques aléatoires, le petit diamètre est vérifié mais il n'y a pas de grand clustering (la configuration stable se comporte comme un $b$-graphe aléatoire incomplet). Par contre, pour les préférences géométriques, la distribution en aile lourde permet d'avoir les deux propriétés : d'un côté, la plupart des partenaires stables ont un petit rang complet ; ils sont donc <<~géographiquement~>> proches ce qui donne le clustering ; de l'autre, il existe des liens longs qui rendent le diamètre petit. Les préférences géométriques sont donc propices à la génération de configurations en petit-monde, et c'est effectivement ce qui se produit~\cite{DBLP:conf/europar/GaiLMMRV07}. Cela ouvre un certain nombre de perspectives sur l'utilisation de la configuration stable, à commencer par un générateur de petits-mondes facile à utiliser.
+
+Ce qui est étonnant dans cette petit-mondisation en préférences géométriques, c'est qu'elle est uniquement créée par la manière dont les pairs se classent les uns les autres : les distances réelles sont utilisées pour construire ces classements, mais les valeurs en elles-mêmes ne jouent aucun rôle direct dans le système à préférences en général et dans sa configuration stable en particulier. Ceci amène à penser que des caractéristiques topologiques d'un système peuvent donc être contenues dans un ensemble de préférences.
+
+Comme exemple de caractéristiques, je me suis amusé à calculer numériquement les paramètres de petit-monde des préférences sur les tores pour quelques dimensions, le résultat étant que le diamètre et le clustering tendent à baisser quand la dimension augmente~\cite{mathieu08stable}. J'ai ensuite regardé ce que donnaient les latences Meridian, et les paramètres obtenus se sont révélés proches de ceux du tore de dimension $3$. J'aime particulièrement ce résultat inattendu, car il semble suggérer qu'il existe une dimension d'Internet \emph{au sens des préférences}, qui vaut à peu près $3$. Je peux ainsi rajouter ma pierre au mur des efforts fournis un peu partout pour estimer une dimension d'Internet (voir par exemple \cite{abrahao08internet}).
+
+
+%The small-world property of a distance-based stable configuration only results from how the nodes rank each other: the actual distances are only used for sorting the nodes, but the values are never involved in the configuration construction. Nevertheless, they reveal valuable insight about the topology of the underlying set of distances.
+%\end{svgraybox}
+
+%For instance, we calculated the ASPL and clustering obtained by using the Meridian Project's real-world latencies, which are known to produce small-worlds configuration~\cite{DBLP:conf/europar/GaiLMMRV07}. One can observe that the results are very close to the one obtained with  $3$-torus, suggesting that somehow, $3$ may be seen as sort of dimension for the latency space. Considering the recent eager for estimating the Internet dimension (see for instance \cite{abrahao08internet}), this unexpected result is appealing.
+
+%For multiple matchings, the stable configuration in geometric preferences is likely to have a high clustering coefficient, because most of the stable edges link close nodes. Moreover, the power-law rank distribution tells that long-range edges exist. So the stable configuration is likely to be eligible as a small-world.%This a powerful result: it indicates that the preference-based systems framework naturally turns proximity-based systems into small-worlds.
+%
+%\begin{table}
+%\begin{center}
+%\begin{tabular}{|c|c|c|}
+%		\hline
+%	Type of preferences & ASPL & Clustering Coefficient \\
+%	\hline
+%	$1$-torus & $7.4$ & $0.055$ \\
+%	\hline
+%	$2$-torus & $6.7$ & $0.043$ \\
+%	 \hline
+%	 Meridian & $6.1$ & $0.031$ \\
+%	 \hline
+%	 $3$-torus & $5.9$ & $0.033$ \\
+%	\hline
+%	$4$-torus & $5.1$ & $0.027$ \\
+%	\hline
+%	 Random Acyclic & $5$ & $0.0043$\\
+%	 \hline
+%\end{tabular}
+%	\caption{ASPL and clustering ($n=2000$,$p=\frac{1}{10}$,$b=10$).}
+%	\label{tab:diam_clust}
+%\end{center}
+%%\vspace{-1.2cm}
+%\end{table}
+%
+%In Table~\ref{tab:diam_clust}, we give the ASPL and clustering coefficient for some preferences, using the parameters $N=2000$,$p=\frac{1}{10}$,$b=10$. The reference clustering is here $\frac{b}{n-1}\approx 0.005$. We verify that for the $t$-tori, the stable configurations are small-worlds.
+%This seems to be a specific property of geometric preferences: like previously observed in~\cite{DBLP:conf/europar/GaiLMMRV07}, the stable configurations of random acyclic preferences are not small-worlds, because of their clustering coefficient (they behave like an incomplete $b$-regular graph). Similarly, node-based preferences have a high clustering but the corresponding ASPL is too high ($\Theta(n)$).
+%
+%
+%%\begin{svgraybox}
+%The small-world property of a distance-based stable configuration only results from how the nodes rank each other: the actual distances are only used for sorting the nodes, but the values are never involved in the configuration construction. Nevertheless, they reveal valuable insight about the topology of the underlying set of distances.
+%%\end{svgraybox}
+%
+%For instance, we calculated the ASPL and clustering obtained by using the Meridian Project's real-world latencies, which are known to produce small-worlds configuration~\cite{DBLP:conf/europar/GaiLMMRV07}. One can observe that the results are very close to the one obtained with  $3$-torus, suggesting that somehow, $3$ may be seen as sort of dimension for the latency space. Considering the recent eager for estimating the Internet dimension (see for instance \cite{abrahao08internet}), this unexpected result is appealing.
+
+\section{Conclusion}
+
+Après une rapide histoire des mariages stables, j'ai présenté les bases nécessaires au maniement des préférences acycliques : le vocabulaire spécifique (parfois imagé), le formalisme, le grand théorème d'\emph{existence, unicité, convergence} et une description des principales classes de préférences acycliques, comme les préférences globales ou géométriques.
+
+J'ai ensuite détaillé la propriété d'auto-stabilisation, et plus précisément le temps nécessaire pour une convergence complète. J'ai présenté des techniques qui permettent de borner ou d'estimer ce temps pour certains paramètres particuliers, et j'ai proposé l'utilisation de simulations pour mettre en évidence le rôle joué par chaque paramètre. On retiendra que dans le pire des cas, avec des pairs asynchrones, la convergence peut être très longue, alors qu'en pratique, elle est assez rapide (préférences globales), voire très rapide (la plupart des autres préférences).
+
+Enfin, j'ai décrit la distribution des partenaires stables pour quelques classes de préférences, en proposant une analyse de cette distribution sous des hypothèses d'indépendance, puis en validant et étendant ces résultats numériquement. Pour les préférences globales, j'ai ainsi mis en évidence l'effet de \emph{stratification}. De manière imagée, dans un monde où il n'y aurait qu'un unique critère de beauté, les beaux se retrouvent avec les beaux, et les moches n'ont guère d'autre choix que d'être avec les moches\footnote{Dans la même veine, je conseille l'article \emph{Beauty and distance in the stable marriage problem}, qui pimente l'algorithme du bal en étudiant l'effet de l'introduction d'un critère de beauté \cite{caldarelli01beauty}.}.
+
+Pour les préférences géométriques, c'est une petit-mondisation qui se produit, due au fait que la distribution des partenaires est en aile lourde, ce qui assure à la fois la localité et les liens longs. L'image est celle d'un monde régi par l'homophilie (\emph{qui se ressemble s'assemble}) : la plupart du temps, la réciprocité permet des collaborations entre proches, mais quand un pair est rejeté par ses plus proches voisins, il doit chercher de plus en plus loin, chez des partenaires potentiels qui l'apprécient de moins en moins au fur et à mesure qu'il doit s'éloigner de sa propre position.
+
+Au final, j'espère avoir réussi à faire partager ma conception des réseaux à préférences acycliques : un modèle possible pour les réseaux pair-à-pair, un ensemble varié de petits problèmes mathématiques, mais aussi une informatique récréative. Je suis conscient que ce chapitre pose plus de questions qu'il n'apporte de réponses : modélisation de l'initiative aléatoire, de l'agitation, étude de nouvelles préférences (pourquoi pas cycliques), graphes et quotas arbitraires, voire variables, routage dans les petits-mondes géométriques\ldots Je n'aurais assurément ni le temps, ni les facultés de répondre à tous ces problèmes, et en conséquent, si ce chapitre donne l'envie à au moins un lecteur de s'intéresser aux réseaux à préférences acycliques, je pense qu'il aura parfaitement rempli son rôle. 
+
+Pour ma part, je pense dans le futur essayer d'appliquer les réseaux à préférences à des situations pratiques, et les relier aux travaux que j'ai effectué sur les problématique de la distribution. J'estime que les préférences acycliques commencent à avoir la maturité nécessaire pour apporter un éclairage nouveau à ces problèmes, et j'aimerais le vérifier, comme j'en parle dans le prochain et dernier chapitre.
+
+\chapter{Synthèse et perspectives}
+\label{sec_conclusion}
+
+
+J'ai présenté au cours de ces quelques pages le point de vue qui est le mien sur ce nouveau domaine de recherche qu'est le pair-à-pair. Partant d'une définition originale qui a l'avantage de mettre en avant pourquoi le pair-à-pair est un domaine de recherche, j'ai proposé une classification qui permet de décrire, dans les grandes lignes, les différents thèmes qu'il est possible d'aborder, suivant que l'on considère le problème de la localisation ou de la distribution ; qu'on l'aborde à l'aide d'une structure explicite ou implicite ; qu'on place la décision à l'émission, à la réception ou des deux côtés ; qu'on ait une approche initiale théorique ou empirique.
+
+J'ai ensuite placé mes propres contributions au sein de ces thématiques : alors qu'une partie de mes travaux s'inscrit dans le cadre d'une meilleure compréhension des problèmes liés à la diffusion, tout en ouvrant la voie à de futures et prometteuses applications, une autre partie est consacrée à créer un nouveau modèle permettant d'apporter un autre éclairage sur les dynamiques des systèmes auto-structurés en général, et du pair-à-pair en particulier. 
+
+Je n'ai pas du tout parlé de mes travaux faits en continuité de ma thématique de thèse, le PageRank~\cite{bouklit05backrank,mathieu06local,djungu06etude,djungu08speedsiterank,gaume08random,gaume09pagerank}, car bien que traitant d'un sujet proche, les grands graphes, ils ne rentrent pas à proprement parler dans le cadre du pair-à-pair, et ce n'est pas mon principal sujet d'étude à l'heure actuelle. Néanmoins, il n'est pas impossible qu'un nouvel hasard me fasse un jour découvrir des nouvelles thématiques liées à ce sujet et relance complètement mon intérêt.
+
+Pour revenir au sujet du pair-à-pair, j'aimerais insister une dernière fois sur le fait que les différentes thématiques ne sont pas figées ni cloisonnées, et que si cela rend la classification des recherches plus analogique que dichotomique, je pense que cela est \emph{in fine} bénéfique. Par exemple, certains graphes, comme les graphes de de Bruijn, ont été introduits en pair-à-pair afin de réaliser des DHTs~\cite{fraigniaud06d2b}. Plus tard, ces mêmes graphes se sont échappés du problème de la localisation et ont été utilisés pour proposer des structures de diffusion~\cite{prefixstream}. De même, les techniques épidémiques, qui sont par nature des techniques de diffusion, peuvent avoir une utilité en localisation~\cite{epitella}. Au fil des ans, cette porosité permet ainsi de faire progresser le front de la recherche, et j'aime à croire que cela est loin d'être terminé.
+
+Car tous ces échanges correspondent parfaitement à la philosophie que j'ai adopté en tant que chercheur, et mon intuition me dit qu'en restant à l'écoute des innovations et des mutations qui se produisent dans tous ces thèmes, j'ai des chances de découvrir de nouvelles pistes qui éveilleront ma curiosité. Il y en a certaines sur lesquelles j'ai une certaine idée, et j'aimerais conclure ce mémoire en exposant ces quelques axes sur lesquels je pense travailler à moyen terme, sachant qu'il est toujours possible que demain, une nouvelle rencontre provoque une nouvelle orientation de mes recherches.
+
+
+\section*{Réseaux à préférences}
+
+Comme le lecteur s'en sera rendu compte, le sujet des réseaux à préférences me tient à c\oe ur, et je pense qu'il devrait encore occuper une partie de mes travaux pour quelques temps encore. Le chemin qu'il reste à parcourir est en effet au moins aussi long, et je le pense aussi passionnant, que celui qui a déjà été fait : caractérisation plus fine des propriétés auto-stabilisantes, modélisation des graphes et quotas dynamiques, étude des propriétés de routage, retour aux préférences cycliques\ldots J'espère, en continuant d'en faire la promotion au sein de la communauté scientifique, réussir à évangéliser des chercheurs qui à leur tour feront progresser la théorie tout en développant des applications concrètes.
+
+Sur le front de ces applications concrètes, j'estime qu'il doit être possible d'utiliser le modèle afin de concevoir des algorithmes de diffusion épidémique encore plus performants. En effet, comme je l'ai montré, les préférences globales permettent une sélection par la bande passante, et des travaux récents semble désigner la sélection orientée par la bande passante comme prometteuse pour réaliser une diffusion épidémique au sein de pairs de capacités hétérogènes. De même, les résultats obtenus sur les préférences de latences permettent d'espérer une minimisation de l'impact réseau de la diffusion sans affecter les propriétés du graphe de diffusion. En combinant de la bonne manière ces deux types de préférences et en appliquant le résultat à la diffusion épidémique, l'algorithme final a de bonnes chances d'être très efficace.
+
+Au-delà du pair-à-pair, j'espère aussi découvrir de nouvelles choses en regardant si les réseaux à préférences peuvent avoir un lien avec les réseaux de capteurs, sur lesquels je compte me pencher. Ce glissement de thématique sera je pense bénéfique pour les réseaux à préférences, et qui sait peut-être aussi pour les réseaux de capteurs.
+
+\section*{Prototypes}
+
+C'est un fait, je ne suis pas un développeur. Malgré tout, je trouve extrêmement frustrant d'avoir travaillé sur des concepts et des algorithmes sans pouvoir vérifier s'ils tiennent la route en pratique. Si je veux être en accord avec mon positionnement en tant que chercheur, je pense donc que je me dois d'essayer de pousser les travaux qui peuvent l'être le plus loin possible sur le chemin de l'application, pourquoi pas jusqu'au déploiement. C'est bien sûr une tâche que je suis incapable de réaliser seul, et j'espère surtout arriver à convaincre des spécialistes du domaine de réaliser le développement.
+
+À l'heure actuelle, il existe deux prototypes que j'apprécierais d'avoir à ma disposition afin de pouvoir tester \emph{grandeur nature} et améliorer les algorithmes sur lesquels j'ai travaillé jusqu'à présent. Il n'est pas très difficile de deviner lesquels : un prototype de diffusion épidémique, et un prototype de vidéo-à-la-demande.
+
+\section*{Futur du pair-à-pair}
+
+Pour conclure sur un axe plus général, j'aimerais partager mon opinion sur le devenir du pair-à-pair. Car si le pair-à-pair doit évoluer, la recherche devra s'adapter elle aussi, ceci incluant mes propres travaux.
+
+Revenons un instant aux origines de l'\emph{âge d'or} du pair-à-pair, telles que je les ai décrites dans l'introduction : d'un point de vue social, l'explosion du pair-à-pair a été provoqué par le besoin de fournir un service pour lequel la demande existe (conséquence des progrès techniques et de la bulle Internet), mais pas l'offre (éclatement de la bulle). Mais aujourd'hui, les services sont à nouveau offerts : espaces de stockage, partage et commerce de fichiers ou de contenus multimedia, télévision et magnétoscope sur Internet\ldots Grâce à une ergonomie supérieure, ces services tendent à reprendre du terrain sur le pair-à-pair en tant que phénomène de société. Le véritable enjeu de cette bataille est la localisation des ressources, chez l'usager (pair-à-pair) ou sur des serveurs (Google, pour simplifier). L'issue en est encore incertaine, avec des victoires et des défaites de part et d'autre. Ce qui est sûr, c'est que nous sommes dans une situation transitoire et que les usages actuels, en particulier les usages pair-à-pair, sont condamnés à évoluer ou à dépérir.
+
+Mais \emph{in fine}, il y a aura toujours d'un côté des services à fournir, et de l'autre des ressources, fussent-elles sur un PC, un téléphone, un magnétoscope virtuel, un adjoint de poste de télévision, un proxy ou un nuage de serveurs. Avec la multiplication des supports, côté usager ou côté fournisseur, il y a donc une question qui, à mon avis, va rester d'actualité quoi qu'il arrive : \emph{qui récupère quoi de la part de qui ?} Et si l'on me demande mon avis sur l'avenir du pair-à-pair (et donc accessoirement sur celui des recherches sur le sujet), je mise sur sa prévisible métempsychose dans les technologies à venir, quelles qu'elles soient. Autrement dit, s'il est possible que le pair-à-pair, dans sa compréhension bittorrentesque, finisse par disparaître dans les années à venir, la recherche en pair-à-pair, qui consiste à répondre à la question \emph{qui récupère quoi de la part de qui ?} quand elle n'est pas triviale, a encore de beaux jours devant elle. L'appellation changera peut-être après absorption par un nouveau domaine émergeant (Cloud Computing ? Virtualisation ?) mais je crois que l'esprit, les thématiques et les méthodes du domaine survivront à la transition. Cependant, cela ne veut pas dire non plus que le domaine ne doit pas anticiper sa propre évolution. Certaines de ces directions sont d'ailleurs déjà visibles : apparition de nouveaux services qui posent de nouveaux défis, par exemple le \emph{start-over} qui combine diffusion en léger différé et à la demande ; hétérogénéité croissante des ressources disponibles, avec l'apparition de solutions hybrides et la multiplication des supports ; déplacement des goulots d'étranglement lié aux changements dans le réseau et les usages.
+
+
+%\emph{
+%\begin{center}
+%Le pair-à-pair va mourir. Vive le pair-à-pair !
+%\end{center}
+%}
+
+%\begin{remark}
+%The FileSharing/VoD/Live partition that is proposed here is didactic, but the reality is not so strict, and some applications may be hard to classify:
+%\begin{description}
+%	\item[Filesharing $\leftrightarrow$ Live] During the initial injection of a content within a filesharing system, that content's availability is very similar to what happens with a live stream. This is known as the \emph{flashcrowd} phase. Using that fact, some P2P systems can turn filesharing applications into live applications. For instance, PPLive~\cite{pplive} is a live streaming P2P application that relies on the filesharing protocol BitTorrent~\cite{cohen03incentives}.
+%	\item[VoD $\leftrightarrow$ Filesharing] Once the flashcrowd phase is over, the only difference between VoD and Filesharing relies in the QoS. If people are fine with a play-out delay equal to the download time of the whole content, then a filesharing system can be used as a VoD system. For instance, the BitTorrent protocol allows popular TV series or movies to be fully downloaded in a few minutes, which makes it a decent VoD system.
+%	\item[Live $\leftrightarrow$ VoD] Some content distribution applications can add their live content to their on-demand catalog in real-time (start-over function), which makes the frontier between live and VoD disappear. This is for instance the case of the sport content provider ESPN360.
+%\end{description}
+%\end{remark}
+
+
+%\finjump
+
+%\nocite{*}
+\bibliographystyle{plain}
+%\addcontentsline{toc}{chapter}{Bibliographie}
+\bibliography{distances,maria,sigproc,vod}
+
+\label{sec:biblio}
+
+\newcommand{\alignquatriemedecouv}{
+\newpage\thispagestyle{empty}~
+\ifodd\value{page}
+\newpage\thispagestyle{empty}
+\else
+\newpage\thispagestyle{empty}~\newpage\thispagestyle{empty}
+\fi
+}
+
+\alignquatriemedecouv
+\newpage
+\newpage
+\pagestyle{empty}
+%%\vspace{-2cm}
+\section*{Résumé}
+D'un millénaire à l'autre, le pair-à-pair a émergé comme un nouveau paradigme informatique. Plus précisément, des nouveaux enjeux sociaux et économiques, ayant trait en particulier à la distribution de contenus, sont venus raviver d'anciennes problématiques liées aux systèmes décentralisés, leur donnant de nouvelles justifications et de nouveaux éclairages.
+
+Dans ce mémoire, je propose tout d'abord de donner des bases pour comprendre et aborder les problématiques pair-à-pair. Après un bref survol des travaux auxquels je me suis intéressé dans le but d'améliorer la distribution de contenu, je me tourne vers un sujet plus théorique : les réseaux à préférences acycliques, lesquels sont un moyen élégant pour modéliser des systèmes pair-à-pair non-structurés ou hybrides. Issus de la théorie des mariages stables, leur principale caractéristique est une capacité auto-stabilisante. Deux questions fondamentales se posent alors, auxquelles je donne un début de réponse : à quelle vitesse un réseau à préférences acycliques se stabilise-t-il, et vers quel état converge-t-il ?
+
+\vspace{2cm}
+
+\begin{center}
+\includegraphics[width=.3\textwidth]{no_kieschnick}
+\end{center}
+
+\vspace{2cm}
+
+\section*{Abstract}
+Peer-to-peer (P2P) recently emerged as a new paradigm in computer science. Due to major economic and social stakes, mostly related to content distribution, P2P has brought back to the forefront many existing research fields related to distributed systems, providing new incentives and goals.
+
+In this work, we give some keys to the understanding of the research fields related to P2P systems. After a brief survey of our work on content distribution, we consider a more theoretical subject: acyclic preference-based systems, which recently appeared as an elegant way to model many P2P unstructured or hybrid  systems. The strength of these models is a self-stabilizing property that allows us to provide analytical results in addition to empirical validation.
+\end{document}
