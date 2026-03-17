@@ -152,7 +152,7 @@ Considérons maintenant des systèmes où l'on fait varier $n$, à $d$ constant.
 - excepté pour le cas ci-dessus (préférences globales, $n$ proche de $d$), les séquences Poissonniennes sont plus longues que les séquences round-robin ;
 - comme pour l'expérience précédente, les préférences acycliques et géométriques convergent le plus vite, suivies des préférences Meridian et enfin, relativement loin, des préférences globales.
 
-La principale leçon à retenir de ces simulations reste que à $d$ fixé, $n$ a relativement peu d'effet sur le temps de convergence. "Le grand $O$ du $d$ est plus important que le grand $O$ du $n$".
+La principale leçon à retenir de ces simulations reste que à $d$ fixé, $n$ a relativement peu d'effet sur le temps de convergence. \u{AB}~Le grand $O$ du $d$ est plus important que le grand $O$ du $n$~\u{BB}.
 
 *Quotas de collaborations*
 

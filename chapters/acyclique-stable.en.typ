@@ -39,7 +39,7 @@ $ D_(R_i)(K) = p S_(R_i)(K) Pr(R_j (C(j)) lt.not R_j (i) | R_i (C(i)) lt.not K) 
 
 The main difficulty of @eq:d_exact is the conditional probability, which is delicate to handle because of the correlations that may exist between $R_j (C(j)) lt.not R_j (i)$ and $R_i (C(i)) lt.not K$. The solution is to consider these correlations as negligible:
 
-#approximation[The events "$i$ is not with someone better than $j$" and "$j$ is not with someone better than $i$" are independent.] <ass:meanfield1>
+#approximation[The events \u{201C}$i$ is not with someone better than $j$\u{201D} and \u{201C}$j$ is not with someone better than $i$\u{201D} are independent.] <ass:meanfield1>
 
 This approximation, which I sometimes somewhat loosely call "mean field hypothesis", is reasonable for $p$ small enough#footnote[A few simple examples seem to indicate an error of order $p^3$, confirmed by the simulations @gai07stratification.]. @eq:d_exact can then be simplified to
 

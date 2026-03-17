@@ -152,7 +152,7 @@ Let us now consider systems where $n$ varies, with $d$ constant. The results are
 - except for the case above (global preferences, $n$ close to $d$), Poissonian sequences are longer than round-robin sequences;
 - as in the previous experiment, acyclic and geometric preferences converge the fastest, followed by Meridian preferences and finally, relatively far behind, global preferences.
 
-The main lesson to take away from these simulations is that for fixed $d$, $n$ has relatively little effect on the convergence time. "The big $O$ of $d$ is more important than the big $O$ of $n$".
+The main lesson to take away from these simulations is that for fixed $d$, $n$ has relatively little effect on the convergence time. \u{201C}The big $O$ of $d$ is more important than the big $O$ of $n$\u{201D}.
 
 *Collaboration quotas*
 

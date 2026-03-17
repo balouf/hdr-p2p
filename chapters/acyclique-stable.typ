@@ -39,7 +39,7 @@ $ D_(R_i)(K) = p S_(R_i)(K) Pr(R_j (C(j)) lt.not R_j (i) | R_i (C(i)) lt.not K) 
 
 La principale difficulté de l'@eq:d_exact est la probabilité conditionnelle, délicate à manier à cause des corrélations qui peuvent exister entre $R_j (C(j)) lt.not R_j (i)$ et $R_i (C(i)) lt.not K$. La solution est de tenir ces corrélations pour négligeables :
 
-#approximation[Les événements "$i$ n'est pas avec meilleur que $j$" et "$j$ n'est pas avec meilleur que $i$" sont indépendants.] <ass:meanfield1>
+#approximation[Les événements \u{AB}~$i$ n'est pas avec meilleur que $j$~\u{BB} et \u{AB}~$j$ n'est pas avec meilleur que $i$~\u{BB} sont indépendants.] <ass:meanfield1>
 
 Cette approximation, que j'appelle parfois un peu abusivement "hypothèse de champ moyen", est raisonnable pour $p$ assez petit#footnote[Quelques exemples simples semblent indiquer une erreur en $p^3$, confirmée par les simulations @gai07stratification.]. L'@eq:d_exact peut alors se simplifier en
 
