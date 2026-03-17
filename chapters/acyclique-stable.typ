@@ -147,7 +147,7 @@ Comme pour les préférences globales, il s'agit de trouver la distribution du r
 
 ==== Distribution du rang complet <section:rank>
 
-Pour les préférences géométriques ou aléatoires, l'approximation @ass:meanfield1 n'est pas suffisante, c'est pourquoi je propose une approximation supplémentaire :
+Pour les préférences géométriques ou aléatoires, l'@ass:meanfield1 n'est pas suffisante, c'est pourquoi je propose une approximation supplémentaire :
 
 #approximation[Le rang complet est symétrique : $R_i (j) = R_j (i)$.] <ass:meanfield2>
 
@@ -252,7 +252,7 @@ Pour les préférences globales, si $D_c (i,j)$ désigne la probabilité que le 
 
 $ D_c (i,j) = cases(0 & "si" i = j"\, sinon", p S_1 (i,j) S_b (j,i) & "si" c = 1\,, p (S_c (i,j) - S_(c-1)(i,j)) S_b (j,i) & "si" c > 1.) $ <eq:nodebase_meanfield_multiple>
 
-De même, pour les préférences acycliques aléatoires et géométriques, on obtient le système suivant à partir de l'approximation @ass:meanfield2 (symétrie du rang complet) @mathieu08stable :
+De même, pour les préférences acycliques aléatoires et géométriques, on obtient le système suivant à partir de l'@ass:meanfield2 (symétrie du rang complet) @mathieu08stable :
 
 $ D_(R,c)(K) = cases(p S_(R,1)(K) S_(R,b)(K) & "si" c = 1\,, p (S_(R,c)(K) - S_(R,c-1)(K)) S_(R,b)(K) & "si" c > 1.) $ <eq:drc_meanfield>
 

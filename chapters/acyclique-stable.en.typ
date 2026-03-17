@@ -147,7 +147,7 @@ As for global preferences, the goal is to find the distribution of the complete 
 
 ==== Distribution of the complete rank <section:rank>
 
-For geometric or random preferences, the approximation @ass:meanfield1 is not sufficient, which is why I propose an additional approximation:
+For geometric or random preferences, the @ass:meanfield1 is not sufficient, which is why I propose an additional approximation:
 
 #approximation[The complete rank is symmetric: $R_i (j) = R_j (i)$.] <ass:meanfield2>
 
@@ -252,7 +252,7 @@ For global preferences, if $D_c (i,j)$ denotes the probability that the $c$th st
 
 $ D_c (i,j) = cases(0 & "si" i = j"\, sinon", p S_1 (i,j) S_b (j,i) & "si" c = 1\,, p (S_c (i,j) - S_(c-1)(i,j)) S_b (j,i) & "si" c > 1.) $ <eq:nodebase_meanfield_multiple>
 
-Similarly, for random acyclic and geometric preferences, we obtain the following system from approximation @ass:meanfield2 (symmetry of the complete rank) @mathieu08stable:
+Similarly, for random acyclic and geometric preferences, we obtain the following system from @ass:meanfield2 (symmetry of the complete rank) @mathieu08stable:
 
 $ D_(R,c)(K) = cases(p S_(R,1)(K) S_(R,b)(K) & "si" c = 1\,, p (S_(R,c)(K) - S_(R,c-1)(K)) S_(R,b)(K) & "si" c > 1.) $ <eq:drc_meanfield>
 
