@@ -18,11 +18,7 @@ The acknowledgements are certainly the most delicate part of a thesis to write. 
 - For living organisms, I only give the first name or the species. In case of a duplicate, a single entry on the grid, but possibly two definitions.
 - Some words in the grid are not acknowledgements, but are just there to decrease the difficulty (or increase it according to some). They are often (but not always) the shortest ones.
 
-// NOTE: The crossword puzzle below is in French and relies on wordplay, personal
-// anecdotes, and cultural references that are inherently untranslatable. It is
-// preserved in its original French form. Francophone readers will appreciate the
-// clues; others are warmly invited to seek help from a French-speaking friend.
-
+_Note: The crossword puzzle below is in French and relies on wordplay, personal anecdotes, and cultural references that are inherently untranslatable. It is preserved in its original French form. Francophone readers will appreciate the clues; others are warmly invited to seek help from a French-speaking friend._
 
 #let defs = (
   across: (
@@ -101,20 +97,26 @@ The acknowledgements are certainly the most delicate part of a thesis to write. 
 
 #let cw = load-crossword(defs)
 
-#align(center)[#show-schema(cw.schema, solved: false, wall-fill: none, wall-stroke: none, cell-fill: lime.lighten(92%),
-cell-size: (18pt, 18pt))]
+// La grille et les définitions sont wrappées dans des grid(columns: 1) afin
+// que le show rule de html-overrides.typ les convertisse en SVG pour l'export HTML.
 
+#grid(columns: 1)[
+  #align(center)[#show-schema(cw.schema, solved: false, wall-fill: none, wall-stroke: none, cell-fill: lime.lighten(92%),
+  cell-size: (18pt, 18pt))]
+]
 
-#table(columns: 2, rows: 1, stroke: none, inset: 0pt, gutter: 20pt,
+#grid(columns: 1)[
+  #table(columns: 2, rows: 1, stroke: none, inset: 0pt, gutter: 20pt,
 	[
-#heading(outlined: false, numbering: none, level: 3)[Horizontalement]
+#heading(outlined: false, numbering: none, level: 3)[Across]
 #show-definitions(cw.definitions.across)
 	],
 	[
-#heading(outlined: false, numbering: none, level: 3)[Verticalement]
+#heading(outlined: false, numbering: none, level: 3)[Down]
 #show-definitions(cw.definitions.down)
 	]
-)
+  )
+]
  #pagebreak()
 
 #v(1fr)
@@ -125,27 +127,4 @@ cell-size: (18pt, 18pt))]
  ])
 
 #v(1fr)
-
-#pagebreak()
-
-
-#heading(outlined: true, numbering: none)[#t([_Avant-propos_], [_Foreword_])]
-
-
-
-The scene takes place in a drinking establishment, on a long afternoon of a waning summer month. Two friends are lounging on the terrace. The beer is cold, and the conversation light. The subject of debate: the existence of a soulmate and the quantitative measurement of love. For one of the two protagonists, the space of feelings is an extremely complex geometry that admits no absolute extremum. Adultery is then nothing more than the amorous application of the optimization method known as _simulated annealing_. One thing leading to another, the topic drifts to a _science et vie_ article that deals with a mathematical model that gives, among other things, a very tantalizing vision of male-female relationships.
-
-This is how I became acquainted, in August 2005, with the theory of stable marriages. And how I unwittingly found my main research project for the next three years, which would eventually motivate this habilitation thesis.
-
-This leads me to note the analogy between research and skiing: on a known and well-traveled domain, there is little risk of getting lost. The terrain is generally (more or less) well-marked, and it is not very difficult to know which runs are interesting to take.
-
-Conversely, an unknown domain provides the joy of plunging into the powder, where the researcher's hand has never set foot. But one must admit that one generally does not quite know where one is going.
-
- I have thus seen theorems of extraordinary power let themselves be proven in a few minutes, while others have resisted (and still resist), sleepless night after sleepless night, every assault endured. Who has never dreamed of these terrain graphs, of these distant peers populated by legends or of a sudden wealth
-that would be conquered at the turn of a path of a Kieschnick chain?
-Who has never wished to see non-local equations guide their steps, at the heart of a stable configuration, toward the riches and history of the mysterious acyclic distributions?
-
-But I am already straying from the foreword to get into the thick of the subject. I hope the reader will take as much pleasure reading this thesis as I took writing it. Be warned, however, that while the introduction was written to be accessible to the widest possible audience, one may encounter throughout the chapters some formulas and proof ideas. In particular during @ch:pbs.
-
-
 

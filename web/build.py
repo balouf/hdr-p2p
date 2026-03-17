@@ -41,10 +41,11 @@ CHAPTERS = {
         ("cover", "index.html", "Accueil"),
         ("disclaimer", "disclaimer.html", "Avertissement"),
         ("remerciements", "remerciements.html", "Remerciements"),
+        ("avant-propos", "avant-propos.html", "Avant-propos"),
         ("introduction", "introduction.html", "Introduction"),
         ("positionnement", "positionnement.html", "Positionnement"),
         ("distribution", "distribution.html", "Distribution de contenu"),
-        ("acyclique", "acyclique.html", "Présentation"),
+        ("acyclique", "acyclique.html", "Préférences acycliques"),
         ("acyclique-origine", "acyclique-origine.html", "Origine"),
         ("acyclique-bases", "acyclique-bases.html", "Les bases"),
         ("acyclique-convergence", "acyclique-convergence.html", "Auto-stabilisation"),
@@ -57,10 +58,11 @@ CHAPTERS = {
         ("cover", "index.html", "Home"),
         ("disclaimer", "disclaimer.html", "Disclaimer"),
         ("remerciements", "remerciements.html", "Acknowledgments"),
+        ("avant-propos", "avant-propos.html", "Foreword"),
         ("introduction", "introduction.html", "Introduction"),
         ("positionnement", "positionnement.html", "Positioning"),
         ("distribution", "distribution.html", "Content Distribution"),
-        ("acyclique", "acyclique.html", "Overview"),
+        ("acyclique", "acyclique.html", "Acyclic Preferences"),
         ("acyclique-origine", "acyclique-origine.html", "Origin"),
         ("acyclique-bases", "acyclique-bases.html", "Foundations"),
         ("acyclique-convergence", "acyclique-convergence.html", "Self-stabilization"),
@@ -71,26 +73,31 @@ CHAPTERS = {
     ],
 }
 
+# Sub-level items: rendered indented and smaller in the sidebar
+SUB_CHAPTERS = {
+    "disclaimer", "remerciements", "avant-propos",
+    "acyclique-origine", "acyclique-bases", "acyclique-convergence",
+    "acyclique-stable", "acyclique-conclusion",
+}
+
 PARTS = {
     "fr": [
-        (None, ["cover", "disclaimer", "remerciements"]),
-        (None, ["introduction", "positionnement", "distribution"]),
-        ("Réseaux à préférences acycliques", [
+        (None, [
+            "cover", "disclaimer", "remerciements", "avant-propos",
+            "introduction", "positionnement", "distribution",
             "acyclique", "acyclique-origine", "acyclique-bases",
             "acyclique-convergence", "acyclique-stable", "acyclique-conclusion",
+            "conclusion", "bibliography",
         ]),
-        (None, ["conclusion"]),
-        (None, ["bibliography"]),
     ],
     "en": [
-        (None, ["cover", "disclaimer", "remerciements"]),
-        (None, ["introduction", "positionnement", "distribution"]),
-        ("Acyclic Preference Networks", [
+        (None, [
+            "cover", "disclaimer", "remerciements", "avant-propos",
+            "introduction", "positionnement", "distribution",
             "acyclique", "acyclique-origine", "acyclique-bases",
             "acyclique-convergence", "acyclique-stable", "acyclique-conclusion",
+            "conclusion", "bibliography",
         ]),
-        (None, ["conclusion"]),
-        (None, ["bibliography"]),
     ],
 }
 
@@ -210,8 +217,13 @@ def build_global_nav(chapters: list[tuple], parts: list[tuple], current_id: str)
         lines.append("  <ul>")
         for sid in section_ids:
             fname, title = chapter_map[sid]
-            active = ' class="active"' if sid == current_id else ""
-            lines.append(f'    <li{active}><a href="{fname}">{title}</a></li>')
+            classes = []
+            if sid == current_id:
+                classes.append("active")
+            if sid in SUB_CHAPTERS:
+                classes.append("nav-sub")
+            cls = f' class="{" ".join(classes)}"' if classes else ""
+            lines.append(f'    <li{cls}><a href="{fname}">{title}</a></li>')
         lines.append("  </ul>")
     lines.append("</nav>")
     return "\n".join(lines)

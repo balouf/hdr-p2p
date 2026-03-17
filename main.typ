@@ -55,6 +55,14 @@
   include "chapters/remerciements.typ"
 }
 
+#pagebreak()
+
+#if lang == "en" {
+  include "chapters/avant-propos.en.typ"
+} else {
+  include "chapters/avant-propos.typ"
+}
+
 
 // -----------------------------------------------------------------------------
 // Table des matières
