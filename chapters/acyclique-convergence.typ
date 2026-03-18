@@ -103,7 +103,7 @@ Pour les préférences globales, avec un graphe d'acceptabilité Erdős-Rényi $
 ] <thm:selfconv_node-based>
 
 #demo[
-  Le coeur de la preuve consiste à _compter_ les pairs bouillants dans les configurations non-stables. Par des techniques combinatoires, on montre qu'il y en a de l'ordre de $n/d$. On en déduit ensuite un temps moyen entre deux initiatives "bouillantes" de l'ordre de $d/n$, ce qui donne le comportement commun en $O(d)$. Enfin, il faut porter une attention particulière à la finalisation du processus de convergence, lorsque la quasi-totalité des arêtes sont déjà stabilisées. Dans cette _fin de partie_, les noeuds non-stables sont quasiment tous bouillants. Une suite round-robin va alors achever la stabilisation en $O(1)$ ($1$ unité de temps stabilise tous les noeuds bouillants du moment), tandis qu'une suite Poissonnienne va avoir besoin de $O(log(n))$ u.t. (problème de boules et d'urnes).
+  Le cœur de la preuve consiste à _compter_ les pairs bouillants dans les configurations non-stables. Par des techniques combinatoires, on montre qu'il y en a de l'ordre de $n/d$. On en déduit ensuite un temps moyen entre deux initiatives "bouillantes" de l'ordre de $d/n$, ce qui donne le comportement commun en $O(d)$. Enfin, il faut porter une attention particulière à la finalisation du processus de convergence, lorsque la quasi-totalité des arêtes sont déjà stabilisées. Dans cette _fin de partie_, les nœuds non-stables sont quasiment tous bouillants. Une suite round-robin va alors achever la stabilisation en $O(1)$ ($1$ unité de temps stabilise tous les nœuds bouillants du moment), tandis qu'une suite Poissonnienne va avoir besoin de $O(log(n))$ u.t. (problème de boules et d'urnes).
 ]
 
 ==== Préférences acycliques

@@ -22,7 +22,6 @@
 #init-acronyms(acronyms)
 
 // Appliquer le style de thèse
-#show: double-vowels
 #show: thesis-style
 
 // Note: les refs aux algorithmes utilisent #algref() car @alg: cause des problèmes avec ctheorems

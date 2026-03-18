@@ -21,16 +21,13 @@
 #import "templates/algorithms.typ": *
 #import "templates/acronyms.typ": *
 #import "templates/html-overrides.typ": *
-#import "templates/prelude.typ": double-vowels
+#import "templates/prelude.typ": *
 
 // Initialiser les acronymes
 #init-acronyms(acronyms)
 
 // Appliquer le style de thèse (page/headers seront ignorés en HTML, c'est OK)
 #show: thesis-style
-
-// Appliquer les ligatures œ/æ
-#show: double-vowels
 
 // Appliquer les show rules HTML (math → SVG, grid → SVG)
 #show: html-show-rules
