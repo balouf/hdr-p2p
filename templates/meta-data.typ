@@ -35,6 +35,7 @@ Peer-to-Peer --- Stable Marriages --- Content Distribution
 )
 
 #let thesis-author = [Fabien #smallcaps[Mathieu]]
+#let thesis-type = t([Habilitation à diriger des recherches], [Habilitation to Supervise Research])
 #let thesis-date = t([11 février 2009], [February 11, 2009])
 #let thesis-specialty = t([Informatique], [Computer Science])
 #let thesis-domain = t([Réseaux et télécommunications (cs.NI)], [Networking and Internet Architecture (cs.NI)])
