@@ -1,5 +1,5 @@
-// Version HTML : heading du chapitre acyclique + paragraphe d'introduction seulement
-// (le reste du chapitre est décomposé en pages séparées par build.py)
+// Introduction du chapitre : incluse par acyclique.typ (PDF, suivie des cinq sections)
+// et, seule, par main-html.typ (édition web, une page par section).
 
 = Réseaux à préférences acycliques <ch:pbs>
 

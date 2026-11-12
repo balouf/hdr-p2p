@@ -114,13 +114,13 @@
 ]
 
 // -----------------------------------------------------------------------------
-// Réseaux à préférences acycliques : en PDF, acyclique.typ inclut ses cinq
-// sections ; ici chacune a sa page, et l'introduction du chapitre vient d'une
-// copie (acyclique-html-intro) du début de acyclique.typ.
+// Réseaux à préférences acycliques : en PDF, acyclique.typ inclut son
+// introduction (acyclique-intro) puis ses cinq sections ; ici l'introduction
+// et chaque section ont leur page.
 // -----------------------------------------------------------------------------
 
 #chapter("acyclique.html", title: t([Préférences acycliques], [Acyclic Preferences]))[
-  #if lang == "en" { include "chapters/acyclique-html-intro.en.typ" } else { include "chapters/acyclique-html-intro.typ" }
+  #if lang == "en" { include "chapters/acyclique-intro.en.typ" } else { include "chapters/acyclique-intro.typ" }
 ]
 
 #subchapter("acyclique-origine.html", title: t([Origine], [Origin]))[
