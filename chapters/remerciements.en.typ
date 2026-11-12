@@ -98,7 +98,7 @@ _Note: The crossword puzzle below is in French and relies on wordplay, personal 
 #let cw = load-crossword(defs)
 
 // La grille et les définitions sont wrappées dans des grid(columns: 1) afin
-// que le show rule de html-overrides.typ les convertisse en SVG pour l'export HTML.
+// que l'édition web (règle `grid` de templates/web/web.typ) les rende en SVG.
 
 #grid(columns: 1)[
   #align(center)[#show-schema(cw.schema, solved: false, wall-fill: none, wall-stroke: none, cell-fill: lime.lighten(92%),

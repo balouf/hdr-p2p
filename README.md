@@ -10,7 +10,7 @@ Available as a bilingual (French/English) website with search, dark mode, and PD
 
 ### Prerequisites
 
-- [Typst](https://typst.app/) >= 0.14.2
+- [Typst](https://typst.app/) >= 0.15.1 (the web edition uses its experimental HTML and bundle exports; the deployment pins 0.15.1)
 - Python >= 3.11
 - [uv](https://docs.astral.sh/uv/)
 
@@ -23,11 +23,11 @@ uv run web/build.py
 This compiles both language versions (HTML + PDF), generates the static site in `web/dist/`, and builds the search index.
 
 Options:
-- `--skip-lang en` — build French only
+- `--lang fr` — build one language only (repeatable)
 - `--skip-pdf` — skip PDF compilation
-- `--skip-compile` — reuse previously compiled HTML
 - `--skip-search` — skip Pagefind indexing
-- `--base-url /prefix/` — set base URL for deployment under a subpath
+
+The web edition relies on the layer in `templates/web/`, a vendored copy from [typst-thesis-web](https://github.com/balouf/typst-thesis-web), where the method is documented.
 
 ### Serve locally
 
